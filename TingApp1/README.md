@@ -1,5 +1,4 @@
-MyApp1
-======
+# TingApp1
 
 Greeting App
 
@@ -10,7 +9,7 @@ Greeting App
  - Toast
  - String resources
 
-Resources:
+## Resources:
  - [Building a Simple User Interface](http://developer.android.com/training/basics/firstapp/building-ui.html)
  - [Dialogs](http://developer.android.com/guide/topics/ui/dialogs.html)
  - [Android SDK: Using Alerts, Toasts and Notifications](http://mobile.tutsplus.com/tutorials/android/android-sdk-alert/)

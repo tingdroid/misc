@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MyApp1</string>
+    <string name="app_name">TingApp1</string>
 
 	<string name="hello">Hello World, MainActivity - from Tingdroid!</string>
     <string name="edit_message">Enter your name</string>
     <string name="button_greet">Greet</string>
 
     <string name="greet_title">Greeting</string>
-    <string name="greet_msg">Hello, %1$s!\nYou have %2$d new messages.</string>
+    <string name="greet_msg">Hello, %1$s!\n\nYou have %2$d new messages.</string>
     <string name="ok">OK</string>
 	<string name="welcome">Welcome!</string>
 	
