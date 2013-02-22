@@ -3,7 +3,7 @@
 
     <string name="app_name">MyApp1</string>
 
-	<string name="hello">Hello World, MainActivity - from Tingtronics!</string>
+	<string name="hello">Hello World, MainActivity - from Tingdroid!</string>
     <string name="edit_message">Enter your name</string>
     <string name="button_greet">Greet</string>
 
