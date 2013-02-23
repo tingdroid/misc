@@ -12,4 +12,23 @@
     <string name="about_msg">Simple App with menu and settings\n\n(C) 2013 Tingtronics</string>
     <string name="ok">OK</string>
 
+    <!-- Setting -->
+	<string name="pref_notify">Notify</string>
+	<string name="pref_notify_summ">Send notifications about events</string>
+
+	<string name="pref_notifyMethod">Notification Method</string>
+	<string-array name="pref_notifyMethod_entries">
+		<item>Email</item>
+		<item>Text</item>
+		<item>Ringtone</item>
+		<item>Buzzz</item>
+	</string-array>
+	<string name="pref_notifyMethod_default">Email</string>
+	<string-array name="pref_notifyMethod_values">
+		<item>Email</item>
+		<item>Text</item>
+		<item>Ringtone</item>
+		<item>Buzzz</item>
+	</string-array>
+	
 </resources>

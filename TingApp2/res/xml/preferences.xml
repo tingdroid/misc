@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
-        android:key="pref_sync"
-        android:title="@string/pref_sync"
-        android:summary="@string/pref_sync_summ"
-        android:defaultValue="true" />
+        android:key="pref_notify"
+        android:title="@string/pref_notify"
+        android:summary="@string/pref_notify_summ"
+        android:defaultValue="false" />
     <ListPreference
-        android:dependency="pref_sync"
-        android:key="pref_syncConnectionType"
-        android:title="@string/pref_syncConnectionType"
-        android:dialogTitle="@string/pref_syncConnectionType"
-        android:entries="@array/pref_syncConnectionTypes_entries"
-        android:entryValues="@array/pref_syncConnectionTypes_values"
-        android:defaultValue="@string/pref_syncConnectionTypes_default" />
+        android:dependency="pref_notify"
+        android:key="pref_notifyMethod"
+        android:title="@string/pref_notifyMethod"
+        android:dialogTitle="@string/pref_notifyMethod"
+        android:entries="@array/pref_notifyMethod_entries"
+        android:entryValues="@array/pref_notifyMethod_values"
+        android:defaultValue="@string/pref_notifyMethod_default" />
 </PreferenceScreen>
