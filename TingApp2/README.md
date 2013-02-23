@@ -9,3 +9,5 @@ Menu, Settings App
 ## Resources:
  - [Menu Design Guidelines]( http://developer.android.com/guide/practices/ui_guidelines/menu_design.html) - Old
  - [Menu Resource](http://developer.android.com/guide/topics/resources/menu-resource.html)
+ - [Settings Design Guide](http://developer.android.com/design/patterns/settings.html)
+ 
