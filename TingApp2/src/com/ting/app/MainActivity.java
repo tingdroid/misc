@@ -5,6 +5,7 @@ import android.content.res.*;
 import android.os.*;
 import android.view.*;
 import com.ting.app.*;
+import android.content.*;
 
 public class MainActivity extends Activity
 {
@@ -17,18 +18,21 @@ public class MainActivity extends Activity
     }
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
-	
+
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle item selection
-		switch (item.getItemId()) {
+		switch (item.getItemId())
+		{
 			case R.id.settings:
-				//newGame();
+				showSettings();
 				return true;
 			case R.id.about:
 				showAbout();
@@ -37,8 +41,15 @@ public class MainActivity extends Activity
 				return super.onOptionsItemSelected(item);
 		}
 	}
+
+	private void showSettings()
+	{
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
 	
-	public void showAbout() {
+	public void showAbout()
+	{
 		// Do something in response to button
 		//EditText editText = (EditText) findViewById(R.id.edit_message);
 		//String username = editText.getText().toString();

@@ -20,6 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+		<activity
+            android:label="@string/pref_title"
+            android:name=".SettingsActivity" >
+            <intent-filter >
+                <action android:name="androidcom.ting.intent.action.PREFERENCE" />
+
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+        </activity>    </application>
 
 </manifest>
