@@ -1,6 +1,7 @@
 package com.ting.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
+import com.ting.app.R;
 import java.lang.reflect.Field;
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -34,7 +36,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class GLActivity extends Activity {
 
 	// Used to handle pause and resume...
-	private static GLActivity master = null;
+	private static Object master = null;
 
 	private GLSurfaceView mGLView;
 	private MyRenderer renderer = null;
@@ -55,7 +57,7 @@ public class GLActivity extends Activity {
 		Logger.log("onCreate");
 
 		if (master != null) {
-		//	copy(master);
+			copy(master);
 		}
 
 		super.onCreate(savedInstanceState);
@@ -104,6 +106,14 @@ public class GLActivity extends Activity {
 
 	private void copy(Object src) {
 		try {
+			if (super.getClass().equals(GLActivity.class)) {
+				Field[] fs = super.getClass().getDeclaredFields();
+				for (Field f : fs) {
+					f.setAccessible(true);
+					f.set(this, f.get(src));
+				}
+				
+			}
 			Logger.log("Copying data from master Activity!");
 			Field[] fs = src.getClass().getDeclaredFields();
 			for (Field f : fs) {
@@ -157,7 +167,7 @@ public class GLActivity extends Activity {
 	}
 
 	// Overrides
-	private Object3D cube = null;	
+	private Object3D cube1 = null;
 
     void init() {
 		Light sun = null;
@@ -172,20 +182,20 @@ public class GLActivity extends Activity {
 		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.icon)), 64, 64));
 		TextureManager.getInstance().addTexture("texture", texture);
 
-		cube = Primitives.getCube(10);
-		cube.calcTextureWrapSpherical();
-		cube.setTexture("texture");
-		cube.strip();
-		cube.build();
+		cube1 = Primitives.getCube(10);
+		cube1.calcTextureWrapSpherical();
+		cube1.setTexture("texture");
+		cube1.strip();
+		cube1.build();
 
-		world.addObject(cube);
+		world.addObject(cube1);
 
 		Camera cam = world.getCamera();
 		cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
-		cam.lookAt(cube.getTransformedCenter());
+		cam.lookAt(cube1.getTransformedCenter());
 
 		SimpleVector sv = new SimpleVector();
-		sv.set(cube.getTransformedCenter());
+		sv.set(cube1.getTransformedCenter());
 		sv.y -= 100;
 		sv.z -= 100;
 		sun.setPosition(sv);
@@ -193,15 +203,26 @@ public class GLActivity extends Activity {
 
     void draw() {
 		if (shiftX != 0) {
-			cube.rotateY(shiftX);
+			cube1.rotateY(shiftX);
 			shiftX = 0;
 		}
 
 		if (shiftY != 0) {
-			cube.rotateX(shiftY);
+			cube1.rotateX(shiftY);
 			shiftY = 0;
 		}
     }
+	
+	public void alert(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder
+			.setTitle(this.getClass().getSimpleName())
+		    .setMessage(message)
+			.setNeutralButton("OK", null);
+
+		builder.show();		
+	}
 
 	class MyRenderer implements GLSurfaceView.Renderer {
 
@@ -217,11 +238,12 @@ public class GLActivity extends Activity {
 			fb = new FrameBuffer(gl, w, h);
 
 			if (master == null) {
+			//	alert("Master null");
                 init();
 
 				MemoryHelper.compact();
 
-				save();
+			    save();
 			}
 		}
 
@@ -237,7 +259,7 @@ public class GLActivity extends Activity {
 			fb.display();
 
 			if (System.currentTimeMillis() - time >= 1000) {
-				Logger.log(fps + "fps");
+				// Logger.log(fps + "fps");
 				fps = 0;
 				time = System.currentTimeMillis();
 			}

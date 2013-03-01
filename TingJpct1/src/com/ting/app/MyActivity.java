@@ -1,11 +1,9 @@
 package com.ting.app;
 
-import android.app.Activity;
 import com.threed.jpct.Camera;
 import com.threed.jpct.Light;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
-import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
@@ -16,14 +14,16 @@ import com.threed.jpct.util.BitmapHelper;
  * A simple demo. 
  * 
  */
-public class HelloWorld extends GLActivity {
+public class MyActivity extends GLActivity {
 
-	private World world = null;
-	private Light sun = null;
+//	private World world = null;
+
 	private Object3D cube = null;
 
 	@Override
     void init() {
+		Light sun = null;
+		
 		world = new World();
 		world.setAmbientLight(20, 20, 20);
 
