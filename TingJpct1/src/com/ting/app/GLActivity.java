@@ -64,16 +64,17 @@ public class GLActivity extends Activity {
 		mGLView = new GLSurfaceView(getApplication());
 
 		mGLView.setEGLConfigChooser(new GLSurfaceView.EGLConfigChooser() {
-				public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
-					// Ensure that we get a 16bit framebuffer. Otherwise, we'll fall
-					// back to Pixelflinger on some device (read: Samsung I7500)
-					int[] attributes = new int[] { EGL10.EGL_DEPTH_SIZE, 16, EGL10.EGL_NONE };
-					EGLConfig[] configs = new EGLConfig[1];
-					int[] result = new int[1];
-					egl.eglChooseConfig(display, attributes, configs, 1, result);
-					return configs[0];
-				}
-			});
+			public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
+				// Ensure that we get a 16bit framebuffer. Otherwise, we'll fall
+				// back to Pixelflinger on some device (read: Samsung I7500)
+				int[] attributes = new int[] { EGL10.EGL_DEPTH_SIZE, 16,
+						EGL10.EGL_NONE };
+				EGLConfig[] configs = new EGLConfig[1];
+				int[] result = new int[1];
+				egl.eglChooseConfig(display, attributes, configs, 1, result);
+				return configs[0];
+			}
+		});
 
 		renderer = new MyRenderer();
 		mGLView.setRenderer(renderer);
@@ -102,17 +103,17 @@ public class GLActivity extends Activity {
 			Logger.log("Saving master Activity!");
 			master = this;
 		}
-	}	
+	}
 
 	private void copy(Object src) {
 		try {
-			if (super.getClass().equals(GLActivity.class)) {
-				Field[] fs = super.getClass().getDeclaredFields();
+			if (super.getClass().getSuperclass().equals(GLActivity.class)) {
+				Field[] fs = super.getClass().getSuperclass().getDeclaredFields();
 				for (Field f : fs) {
 					f.setAccessible(true);
 					f.set(this, f.get(src));
 				}
-				
+
 			}
 			Logger.log("Copying data from master Activity!");
 			Field[] fs = src.getClass().getDeclaredFields();
@@ -137,7 +138,7 @@ public class GLActivity extends Activity {
 			xpos = -1;
 			ypos = -1;
 			shiftX = 0;
-		    shiftY = 0;
+			shiftY = 0;
 			return true;
 		}
 
@@ -169,7 +170,7 @@ public class GLActivity extends Activity {
 	// Overrides
 	private Object3D cube1 = null;
 
-    void init() {
+	void init() {
 		Light sun = null;
 
 		world = new World();
@@ -179,7 +180,8 @@ public class GLActivity extends Activity {
 		sun.setIntensity(250, 250, 250);
 
 		// Create a texture out of the icon...:-)
-		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.icon)), 64, 64));
+		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper
+				.convert(getResources().getDrawable(R.drawable.icon)), 64, 64));
 		TextureManager.getInstance().addTexture("texture", texture);
 
 		cube1 = Primitives.getCube(10);
@@ -199,9 +201,9 @@ public class GLActivity extends Activity {
 		sv.y -= 100;
 		sv.z -= 100;
 		sun.setPosition(sv);
-    }
+	}
 
-    void draw() {
+	void draw() {
 		if (shiftX != 0) {
 			cube1.rotateY(shiftX);
 			shiftX = 0;
@@ -211,17 +213,15 @@ public class GLActivity extends Activity {
 			cube1.rotateX(shiftY);
 			shiftY = 0;
 		}
-    }
-	
+	}
+
 	public void alert(String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder
-			.setTitle(this.getClass().getSimpleName())
-		    .setMessage(message)
-			.setNeutralButton("OK", null);
+		builder.setTitle(this.getClass().getSimpleName()).setMessage(message)
+				.setNeutralButton("OK", null);
 
-		builder.show();		
+		builder.show();
 	}
 
 	class MyRenderer implements GLSurfaceView.Renderer {
@@ -238,12 +238,12 @@ public class GLActivity extends Activity {
 			fb = new FrameBuffer(gl, w, h);
 
 			if (master == null) {
-			//	alert("Master null");
-                init();
+				// alert("Master null");
+				init();
 
 				MemoryHelper.compact();
 
-			    save();
+				save();
 			}
 		}
 
@@ -251,10 +251,14 @@ public class GLActivity extends Activity {
 		}
 
 		public void onDrawFrame(GL10 gl) {
-            draw();
+			draw();
 
 			fb.clear(back);
-			world.renderScene(fb);
+			try {
+				world.renderScene(fb);
+			} catch (Exception e) {
+				Logger.log(e);
+			}
 			world.draw(fb);
 			fb.display();
 
