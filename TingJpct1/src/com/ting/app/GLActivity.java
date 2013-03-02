@@ -45,9 +45,6 @@ public class GLActivity extends Activity {
 	protected World world = null;
 	protected RGBColor back = new RGBColor(50, 50, 100);
 
-	protected float shiftX = 0;
-	protected float shiftY = 0;
-
 	private float xpos = -1;
 	private float ypos = -1;
 
@@ -138,18 +135,14 @@ public class GLActivity extends Activity {
 		if (me.getAction() == MotionEvent.ACTION_UP) {
 			xpos = -1;
 			ypos = -1;
-			shiftX = 0;
-			shiftY = 0;
 			return true;
 		}
 
 		if (me.getAction() == MotionEvent.ACTION_MOVE) {
-			shiftX = me.getX() - xpos;
-			shiftY = me.getY() - ypos;
+			move(me.getX() - xpos, me.getY() - ypos);
 
 			xpos = me.getX();
 			ypos = me.getY();
-
 			return true;
 		}
 
@@ -207,25 +200,14 @@ public class GLActivity extends Activity {
 		sun.setPosition(sv);
 	}
 
-	void draw() {
-		if (shiftX != 0) {
-			cube1.rotateY(shiftX/-100f);
-			shiftX = 0;
+	void move(float dx, float dy) {
+		if (dx != 0) {
+			cube1.rotateY(dx/-100f);
 		}
 
-		if (shiftY != 0) {
-			cube1.rotateX(shiftY/-100f);
-			shiftY = 0;
+		if (dy != 0) {
+			cube1.rotateX(dy/-100f);
 		}
-	}
-
-	public void alert(String message) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		builder.setTitle(this.getClass().getSimpleName()).setMessage(message)
-				.setNeutralButton("OK", null);
-
-		builder.show();
 	}
 
 	class MyRenderer implements GLSurfaceView.Renderer {
@@ -242,7 +224,6 @@ public class GLActivity extends Activity {
 			fb = new FrameBuffer(gl, w, h);
 
 			if (master == null) {
-				// alert("Master null");
 				init();
 
 				MemoryHelper.compact();
@@ -255,7 +236,7 @@ public class GLActivity extends Activity {
 		}
 
 		public void onDrawFrame(GL10 gl) {
-			draw();
+			// draw();
 
 			fb.clear(back);
 			try {

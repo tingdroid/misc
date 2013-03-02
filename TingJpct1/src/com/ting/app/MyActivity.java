@@ -13,8 +13,6 @@ import com.threed.jpct.World;
  */
 public class MyActivity extends GLActivity {
 
-//	private World world = null;
-
 	private Object3D cube = null;
 
 	@Override
@@ -45,17 +43,14 @@ public class MyActivity extends GLActivity {
     }
 
 	@Override
-    void draw() {
-		if (shiftX != 0) {
-			cube.rotateY(shiftX/-100f);
-			shiftX = 0;
+	void move(float dx, float dy) {
+		if (dx != 0) {
+			cube.rotateY(dx/-100f);
 		}
 
-		if (shiftY != 0) {
-			cube.rotateX(shiftY/-100f);
-			shiftY = 0;
+		if (dy != 0) {
+			cube.rotateX(dy/-100f);
 		}
-    }
-
+	}
 }
 
