@@ -6,6 +6,7 @@ import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.World;
+import android.widget.SimpleCursorAdapter;
 
 /**
  * A simple demo. 
@@ -14,6 +15,7 @@ import com.threed.jpct.World;
 public class MyActivity extends GLActivity {
 
 	private Object3D cube = null;
+	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
 
 	@Override
     void init() {		
@@ -25,21 +27,15 @@ public class MyActivity extends GLActivity {
 		cube.setTexture(addTexture("texture", R.drawable.icon, 64, 64));
 		cube.strip();
 		cube.build();
-
 		world.addObject(cube);
 
 		Camera cam = world.getCamera();
 		cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
 		cam.lookAt(cube.getTransformedCenter());
 
-		SimpleVector sv = new SimpleVector();
-		sv.set(cube.getTransformedCenter());
-		sv.y -= 100;
-		sv.z -= 100;
-
 	    Light sun = new Light(world);
 		sun.setIntensity(250, 250, 250);
-		sun.setPosition(sv);
+		sun.setPosition(cube.getTransformedCenter().calcAdd(sunOffset));
     }
 
 	@Override
