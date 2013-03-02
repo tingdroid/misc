@@ -4,10 +4,9 @@ import com.threed.jpct.Camera;
 import com.threed.jpct.Light;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
+import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.World;
-import android.widget.SimpleCursorAdapter;
-import com.threed.jpct.RGBColor;
 
 /**
  * A simple demo. 
@@ -40,18 +39,21 @@ public class MyActivity extends GLActivity {
 		center.addChild(cube);
 
 		Object3D coneX = Primitives.getCone(1);
+		coneX.rotateZ((float)-Math.PI/2);
 		coneX.translate(15, 0, 0);
 		coneX.setAdditionalColor(new RGBColor(255, 0, 0));
 		center.addChild(coneX);
 		add(coneX);
 		
 		Object3D coneY = Primitives.getCone(1);
+		coneY.rotateX((float)-Math.PI);
 		coneY.translate(0, 15, 0);
 		coneY.setAdditionalColor(new RGBColor(0, 255, 0));
 		center.addChild(coneY);
 		add(coneY);
 
 		Object3D coneZ = Primitives.getCone(1);
+		coneZ.rotateX((float)Math.PI/2);
 		coneZ.translate(0, 0, 15);
 		coneZ.setAdditionalColor(new RGBColor(0, 0, 255));
 		center.addChild(coneZ);
