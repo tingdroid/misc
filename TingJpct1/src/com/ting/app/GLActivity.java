@@ -44,6 +44,7 @@ public class GLActivity extends Activity {
 
 	protected World world = null;
 	protected RGBColor back = new RGBColor(50, 50, 100);
+
 	protected float shiftX = 0;
 	protected float shiftY = 0;
 
@@ -143,14 +144,12 @@ public class GLActivity extends Activity {
 		}
 
 		if (me.getAction() == MotionEvent.ACTION_MOVE) {
-			float xd = me.getX() - xpos;
-			float yd = me.getY() - ypos;
+			shiftX = me.getX() - xpos;
+			shiftY = me.getY() - ypos;
 
 			xpos = me.getX();
 			ypos = me.getY();
 
-			shiftX = xd / -100f;
-			shiftY = yd / -100f;
 			return true;
 		}
 
@@ -167,7 +166,17 @@ public class GLActivity extends Activity {
 		return true;
 	}
 
+    // Helpers	
+
+	String addTexture(String name, int index, int width, int height) {
+        // Create a texture out of the icon...:-)
+		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(index)), width, height));
+		TextureManager.getInstance().addTexture(name, texture);
+		return name;
+	}
+
 	// Overrides
+
 	private Object3D cube1 = null;
 
 	void init() {
@@ -179,14 +188,9 @@ public class GLActivity extends Activity {
 		sun = new Light(world);
 		sun.setIntensity(250, 250, 250);
 
-		// Create a texture out of the icon...:-)
-		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper
-				.convert(getResources().getDrawable(R.drawable.icon)), 64, 64));
-		TextureManager.getInstance().addTexture("texture", texture);
-
 		cube1 = Primitives.getCube(10);
 		cube1.calcTextureWrapSpherical();
-		cube1.setTexture("texture");
+		cube1.setTexture(addTexture("texture", R.drawable.icon, 64, 64));
 		cube1.strip();
 		cube1.build();
 
@@ -205,12 +209,12 @@ public class GLActivity extends Activity {
 
 	void draw() {
 		if (shiftX != 0) {
-			cube1.rotateY(shiftX);
+			cube1.rotateY(shiftX/-100f);
 			shiftX = 0;
 		}
 
 		if (shiftY != 0) {
-			cube1.rotateX(shiftY);
+			cube1.rotateX(shiftY/-100f);
 			shiftY = 0;
 		}
 	}
