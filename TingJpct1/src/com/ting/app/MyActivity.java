@@ -4,9 +4,9 @@ import com.threed.jpct.Camera;
 import com.threed.jpct.Light;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
+import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.World;
-import android.widget.SimpleCursorAdapter;
 
 /**
  * A simple demo. 
@@ -18,7 +18,8 @@ public class MyActivity extends GLActivity {
 	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
 
 	@Override
-    void init() {		
+    void init() {
+		back = new RGBColor(50, 50, 100);
 		world = new World();
 		world.setAmbientLight(20, 20, 20);
 
