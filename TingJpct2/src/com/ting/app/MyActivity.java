@@ -18,10 +18,14 @@ public class MyActivity extends GLActivity {
 	private Object3D center = null;
 	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
 
-	void add(Object3D obj) {
-		obj.strip();
-		obj.build();
-		world.addObject(obj);		
+	Object3D addCone(Object3D parent, float size, SimpleVector axis, double angle, SimpleVector offset, String texture) {
+		Object3D cone = Primitives.getCone(size);
+		cone.rotateAxis(axis, (float)angle);
+		cone.translate(offset);
+		cone.setTexture(texture);
+		//coneX.setAdditionalColor(RGBColor.RED);
+		add(cone, parent);
+		return cone;
 	}
 	
 	@Override
@@ -29,36 +33,19 @@ public class MyActivity extends GLActivity {
 		world = new World();
 		world.setAmbientLight(20, 20, 20);
 
+		center = Primitives.getSphere(1);
+		add(center, null);
+
 		cube = Primitives.getCube(10);
 		cube.calcTextureWrapSpherical();
-		cube.setTexture(addTexture("texture", R.drawable.icon, 64, 64));
-		add(cube);
+		// cube.setTexture(addTexture("texture", R.drawable.icon, 64, 64));
+		cube.setTexture(colorTexture("#00a0a0"));
+		add(cube, center);
 
-		center = Primitives.getSphere(1);
-		add(center);
-		center.addChild(cube);
-
-		Object3D coneX = Primitives.getCone(1);
-		coneX.rotateZ((float)-Math.PI/2);
-		coneX.translate(15, 0, 0);
-		coneX.setAdditionalColor(new RGBColor(255, 0, 0));
-		center.addChild(coneX);
-		add(coneX);
+		addCone(center, 1, AXIS.Z, -Math.PI/2, v3(15,0,0), colorTexture("#ff0000"));
+		addCone(center, 1, AXIS.X, -Math.PI,   v3(0,15,0), colorTexture("#00ff00"));
+		addCone(center, 1, AXIS.X,  Math.PI/2, v3(0,0,15), colorTexture("#0000ff"));
 		
-		Object3D coneY = Primitives.getCone(1);
-		coneY.rotateX((float)-Math.PI);
-		coneY.translate(0, 15, 0);
-		coneY.setAdditionalColor(new RGBColor(0, 255, 0));
-		center.addChild(coneY);
-		add(coneY);
-
-		Object3D coneZ = Primitives.getCone(1);
-		coneZ.rotateX((float)Math.PI/2);
-		coneZ.translate(0, 0, 15);
-		coneZ.setAdditionalColor(new RGBColor(0, 0, 255));
-		center.addChild(coneZ);
-		add(coneZ);
-
 		Camera cam = world.getCamera();
 		cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
 		cam.lookAt(cube.getTransformedCenter());

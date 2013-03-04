@@ -161,10 +161,40 @@ public class GLActivity extends Activity {
 
     // Helpers	
 
+	interface AXIS {
+		public static final SimpleVector X = v3(1,0,0);
+		public static final SimpleVector Y = v3(0,1,0);
+		public static final SimpleVector Z = v3(0,0,1);
+	}
+
+	public static SimpleVector v3(float x, float y, float z) {
+		return SimpleVector.create(x, y, z);
+	}
+
+	void add(Object3D obj, Object3D parent) {
+		if (parent != null) parent.addChild(obj);
+		obj.strip();
+		obj.build();
+		world.addObject(obj);		
+	}
+
 	String addTexture(String name, int index, int width, int height) {
-        // Create a texture out of the icon...:-)
+        // Create a texture out of the icon
 		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(index)), width, height));
 		TextureManager.getInstance().addTexture(name, texture);
+		return name;
+	}
+
+	String colorTexture(String name) {
+        // Create a texture out of the color
+		if (!TextureManager.getInstance().containsTexture(name)) {
+			int r = Integer.valueOf(name.substring(1,3), 16);
+			int g = Integer.valueOf(name.substring(3,5), 16);
+			int b = Integer.valueOf(name.substring(5,7), 16);
+			RGBColor color = new RGBColor(r, g, b);
+			Texture texture = new Texture(8, 8, color);
+			TextureManager.getInstance().addTexture(name, texture);			
+		}
 		return name;
 	}
 
