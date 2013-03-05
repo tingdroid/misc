@@ -25,6 +25,17 @@ public class MainActivity extends Activity
 		return true;
 	}
 
+	boolean toggleChecked(MenuItem item) {
+		if (item.isChecked()) {
+			item.setChecked(false);
+			item.setIcon(R.drawable.check_0);
+		} else {
+			item.setChecked(true);
+			item.setIcon(R.drawable.check_1);					
+		}
+		return item.isChecked();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -36,6 +47,12 @@ public class MainActivity extends Activity
 				return true;
 			case R.id.about:
 				showAbout();
+				return true;
+			case R.id.mute:
+			    boolean muted = toggleChecked(item);
+				return true;
+			case R.id.alert:
+			    boolean alerting = toggleChecked(item);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
