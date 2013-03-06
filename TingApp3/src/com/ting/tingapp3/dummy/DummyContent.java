@@ -1,4 +1,4 @@
-package com.ting.app.dummy;
+package com.ting.tingapp3.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
