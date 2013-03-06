@@ -1,11 +1,13 @@
 package com.ting.app;
 
-import android.app.*;
-import android.content.res.*;
-import android.os.*;
-import android.view.*;
-import com.ting.app.*;
-import android.content.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class MainActivity extends Activity
 {

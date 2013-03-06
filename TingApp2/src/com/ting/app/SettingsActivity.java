@@ -8,6 +8,8 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Deprecated. Suggested using a modern fragment-based PreferenceActivity
         addPreferencesFromResource(R.xml.preferences);
     }
 }
