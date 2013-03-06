@@ -1,7 +1,7 @@
-package com.ting.app;
+package com.ting.tingapp2;
 
-import android.os.*;
-import android.preference.*;
+import android.os.Bundle;
+import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity
  {
@@ -13,4 +13,3 @@ public class SettingsActivity extends PreferenceActivity
         addPreferencesFromResource(R.xml.preferences);
     }
 }
-
