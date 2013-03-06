@@ -1,4 +1,4 @@
-package com.ting.app;
+package com.ting.tingapp3;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ting.app.dummy.DummyContent;
+import com.ting.tingapp3.dummy.DummyContent;
 
 /**
  * A fragment representing a single Item detail screen.

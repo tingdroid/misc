@@ -1,4 +1,4 @@
-package com.ting.app;
+package com.ting.tingapp3;
 
 import android.content.Intent;
 import android.os.Bundle;

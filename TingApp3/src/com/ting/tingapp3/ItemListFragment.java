@@ -1,4 +1,4 @@
-package com.ting.app;
+package com.ting.tingapp3;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.ting.app.dummy.DummyContent;
+import com.ting.tingapp3.dummy.DummyContent;
 
 /**
  * A list fragment representing a list of Items. This fragment
