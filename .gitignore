@@ -21,3 +21,6 @@ local.properties
 
 # Eclipse settings
 .settings/
+
+# OS files
+.DS_Store
