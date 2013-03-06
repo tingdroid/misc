@@ -2,8 +2,12 @@ package com.ting.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import com.threed.jpct.Camera;
 import com.threed.jpct.FrameBuffer;
@@ -102,6 +106,65 @@ public class GLActivity extends Activity {
 			master = this;
 		}
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+
+	boolean toggleChecked(MenuItem item) {
+		if (item.isChecked()) {
+			item.setChecked(false);
+			item.setIcon(R.drawable.check_0);
+		} else {
+			item.setChecked(true);
+			item.setIcon(R.drawable.check_1);					
+		}
+		return item.isChecked();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// Handle item selection
+		switch (item.getItemId())
+		{
+			case R.id.settings:
+				showSettings();
+				return true;
+			case R.id.about:
+				alert(getResources().getString(R.string.about_msg));
+				return true;
+			case R.id.mute:
+			    boolean muted = toggleChecked(item);
+				return true;
+			case R.id.alert:
+			    boolean alerting = toggleChecked(item);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void showSettings()
+	{
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
+	}
+	
+	public void alert(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder
+			.setTitle(this.getClass().getSimpleName())
+		    .setMessage(message)
+			.setNeutralButton("OK", null);
+
+		builder.show();		
+	}	
 
 	private void copy(Object src) {
 		try {
