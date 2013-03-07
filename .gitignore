@@ -21,6 +21,7 @@ local.properties
 
 # Eclipse settings
 .settings/
+lint.xml
 
 # OS files
 .DS_Store
