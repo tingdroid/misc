@@ -1,4 +1,4 @@
-package com.ting.app;
+package com.ting.tingjpct2;
 
 import com.threed.jpct.Camera;
 import com.threed.jpct.Light;

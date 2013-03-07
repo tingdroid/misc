@@ -1,4 +1,4 @@
-package com.ting.app;
+package com.ting.tingjpct3;
 
 import android.os.*;
 import android.preference.*;

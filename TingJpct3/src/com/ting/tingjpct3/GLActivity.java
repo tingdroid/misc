@@ -1,4 +1,4 @@
-package com.ting.app;
+package com.ting.tingjpct3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,7 +22,8 @@ import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
-import com.ting.app.R;
+import com.ting.tingjpct3.R;
+
 import java.lang.reflect.Field;
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
