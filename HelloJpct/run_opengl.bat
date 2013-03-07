@@ -1,0 +1,1 @@
+java -Djava.library.path=../jpct/lib/lwjgl-2.8.0/native/windows -Xmx128m -classpath bin;../jpct/lib/jpct/jpct.jar;../jpct/lib/lwjgl-2.8.0/jar/lwjgl.jar;../jpct/lib/lwjgl-2.8.0/jar/lwjgl_util.jar HelloWorldOGL
