@@ -1,1 +1,5 @@
-java -Djava.library.path=../jpct/lib/lwjgl-2.8.0/native/windows -Xmx128m -classpath bin;../jpct/lib/jpct/jpct.jar;../jpct/lib/lwjgl-2.8.0/jar/lwjgl.jar;../jpct/lib/lwjgl-2.8.0/jar/lwjgl_util.jar HelloWorldOGL
+set JPCT_LIB=../../jpct/lib
+set JPCT_JNI=-Djava.library.path=%JPCT_LIB%/lwjgl-2.8.0/native/windows
+set JPCT_CP=%JPCT_LIB%/jpct/jpct.jar;%JPCT_LIB%/lwjgl-2.8.0/jar/lwjgl.jar;%JPCT_LIB%/lwjgl-2.8.0/jar/lwjgl_util.jar
+
+java %JPCT_JNI% -Xmx128m -classpath bin;%JPCT_CP% HelloWorldOGL
