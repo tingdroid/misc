@@ -12,6 +12,7 @@ package com.ting.tingapp2;
 import java.text.DecimalFormat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.DialogPreference;
 import android.preference.Preference;
 import android.util.AttributeSet;
@@ -32,27 +33,35 @@ import android.widget.TextView;
  * It uses some standard android attributes:
  * <dl>
  * <dt>android:dialogMessage
- * 		<dd>Shown above the SeekBar as a splash message in the dialog
+ * <dd>Shown above the SeekBar as a splash message in the dialog
  * <dt>android:text
- * 		<dd>Format string for the current value of the slider in the dialog; this can be
- *          used to indicate the units
+ * <dd>({@link String#format} string) Format pattern for the current value of
+ * the slider in the dialog; can be used to indicate the units
  * <dt>android:max
- * 		<dd>Number of steps between valueFrom and valueTo. 
- *          Behaves the same as SeekBar's max attribute. 
- *          E.g. with max: 2, valueFrom: 1, valueTo: 5, the possible values are 1, 3, 5. 
+ * <dd>(int &gt; 0) Number of steps between valueFrom and valueTo. Behaves the
+ * same as SeekBar's max attribute. E.g. with max: 2, valueFrom: 1, valueTo: 5,
+ * the possible values are 1, 3, 5.
  * <dt>android:valueType
- * 		<dd>('intType' or 'floatType') Data type of domain units. 'floatType' is Default.
+ * <dd>('intType' or 'floatType') Data type of domain units. 'intType' is
+ * Default.
  * <dt>android:defaultValue
- * 		<dd>(int or float) Default value in domain units
+ * <dd>(int or float) Default value in domain units.
  * <dt>android:valueFrom
- * 		<dd>(int or float) Minimum value in domain units
+ * <dd>(int or float) Minimum value in domain units
  * <dt>android:valueTo
- * 		<dd>(int or float) Maximum value in domain units
+ * <dd>(int or float) Maximum value in domain units
+ * <dt>android:format
+ * <dd>({@link DecimalFormat} string) Format string for the value, before it is
+ * processed by "text" format pattern; can used to control decimal digits
+ * </dl>
+ * <p>
+ * Note: Parameter values and defaults for 'floatType' should contain decimal
+ * point and digits, whereas for 'intType' should not.
  */
 public class SeekBarPreference extends DialogPreference implements
 		SeekBar.OnSeekBarChangeListener {
 	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
-	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.####");
+	private static final String FLOAT_TYPE = "0";
 
 	private SeekBar mSeekBar;
 	private TextView mValueText;
@@ -61,8 +70,10 @@ public class SeekBarPreference extends DialogPreference implements
 	private String mDialogMessage, mSuffix;
 	private int mMax;
 	private float mValue = 0;
-	private float mDefault, mvMin, mvMax, mvStep;
+	private float mDefault, mvMin, mvMax;
 	private boolean mIsFloat;
+
+	private DecimalFormat mFormat;
 
 	public SeekBarPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -70,21 +81,28 @@ public class SeekBarPreference extends DialogPreference implements
 
 		mDialogMessage = attrs.getAttributeValue(ANDROID_NS, "dialogMessage");
 		mSuffix = attrs.getAttributeValue(ANDROID_NS, "text");
-		mIsFloat = !"intType".equals(attrs.getAttributeValue(ANDROID_NS,
-				"valueType"));
+		String format = attrs.getAttributeValue(ANDROID_NS, "format");
+		mFormat = new DecimalFormat(format != null ? format : "#.####");
+
+		String type = attrs.getAttributeValue(ANDROID_NS, "valueType");
+		mIsFloat = FLOAT_TYPE.equals(type);
+		
 		mMax = attrs.getAttributeIntValue(ANDROID_NS, "max", 100);
 
 		if (mIsFloat) {
 			mvMin = attrs.getAttributeFloatValue(ANDROID_NS, "valueFrom", 0);
 			mvMax = attrs.getAttributeFloatValue(ANDROID_NS, "valueTo", mMax);
-			mDefault = attrs.getAttributeFloatValue(ANDROID_NS, "defaultValue", 0);
+			mDefault = attrs.getAttributeFloatValue(ANDROID_NS, "defaultValue",
+					mvMin);
 		} else {
 			mvMin = attrs.getAttributeIntValue(ANDROID_NS, "valueFrom", 0);
 			mvMax = attrs.getAttributeIntValue(ANDROID_NS, "valueTo", mMax);
-			mDefault = attrs.getAttributeIntValue(ANDROID_NS, "defaultValue", 0);
+			mDefault = attrs.getAttributeIntValue(ANDROID_NS, "defaultValue",
+					(int) mvMin);
 		}
-		mvStep = (mvMax - mvMin) / mMax;
 	}
+
+	// DialogPreference overrides
 
 	@Override
 	protected View onCreateDialogView() {
@@ -112,7 +130,7 @@ public class SeekBarPreference extends DialogPreference implements
 			RelativeLayout rangeLayout = new RelativeLayout(mContext);
 
 			TextView minText = new TextView(mContext);
-			minText.setText(DECIMAL_FORMAT.format(mvMin));
+			minText.setText(format(mvMin));
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -120,7 +138,7 @@ public class SeekBarPreference extends DialogPreference implements
 			rangeLayout.addView(minText, params);
 
 			TextView maxText = new TextView(mContext);
-			maxText.setText(DECIMAL_FORMAT.format(mvMax));
+			maxText.setText(format(mvMax));
 			params = new RelativeLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -139,34 +157,8 @@ public class SeekBarPreference extends DialogPreference implements
 		mSeekBar.setProgress(toProgress(mValue));
 		mSeekBar.setOnSeekBarChangeListener(this);
 
-		mValueText.setText(toString());
+		mValueText.setText(getProgressString());
 		return layout;
-	}
-
-	int toProgress(float fVal) {
-		return (int) ((fVal - mvMin) / mvStep);
-	}
-
-	float getPersisted() {
-		float fVal = mDefault;
-		if (shouldPersist()) {
-			fVal = mIsFloat ? getPersistedFloat(mDefault)
-					: getPersistedInt((int) mDefault);
-		}
-		return fVal;
-	}
-
-	float fromProgress(int iVal) {
-		return mvMin + (float) iVal * mvStep;
-	}
-
-	void setPersisted(float fVal) {
-		if (!shouldPersist()) return;
-		if (mIsFloat) {
-			persistFloat(fVal);
-		} else {
-			persistInt((int)fVal);
-		}
 	}
 
 	@Override
@@ -185,11 +177,29 @@ public class SeekBarPreference extends DialogPreference implements
 			mValue = Float.parseFloat(String.valueOf(defaultValue));
 	}
 
+	/**
+	 * Called when the dialog is dismissed and should be used to save data to
+	 * the {@link SharedPreferences}.
+	 * 
+	 * @param positiveResult
+	 *            Whether the positive button was clicked (true), or the
+	 *            negative button was clicked or the dialog was canceled
+	 *            (false).
+	 */
+	@Override
+	protected void onDialogClosed(boolean positiveResult) {
+		if (!positiveResult)
+			return;
+		if (callChangeListener(getProgressNumber())) {
+			setPersisted(mValue);
+		}
+	}
+
+	// OnSeekBarChangeListener overrides
+
 	public void onProgressChanged(SeekBar seek, int value, boolean fromTouch) {
 		mValue = fromProgress(value);
-		mValueText.setText(toString());
-		setPersisted(mValue);
-		callChangeListener(mIsFloat ? Float.valueOf(mValue) : Integer.valueOf((int)mValue));
+		mValueText.setText(getProgressString());
 	}
 
 	public void onStartTrackingTouch(SeekBar seek) {
@@ -197,6 +207,39 @@ public class SeekBarPreference extends DialogPreference implements
 
 	public void onStopTrackingTouch(SeekBar seek) {
 	}
+
+	// helpers
+
+	int toProgress(float fVal) {
+		float mvStep = (mvMax - mvMin) / mMax;
+		return Math.round((fVal - mvMin) / mvStep);
+	}
+
+	float fromProgress(int iVal) {
+		float mvStep = (mvMax - mvMin) / mMax;
+		return mvMin + (float) iVal * mvStep;
+	}
+
+	float getPersisted() {
+		float fVal = mDefault;
+		if (shouldPersist()) {
+			fVal = mIsFloat ? getPersistedFloat(mDefault)
+					: getPersistedInt((int) mDefault);
+		}
+		return fVal;
+	}
+
+	void setPersisted(float fVal) {
+		if (!shouldPersist())
+			return;
+		if (mIsFloat) {
+			persistFloat(fVal);
+		} else {
+			persistInt(Math.round(fVal));
+		}
+	}
+
+	// public interface
 
 	public void setMax(int max) {
 		mMax = max;
@@ -209,6 +252,7 @@ public class SeekBarPreference extends DialogPreference implements
 	public void setProgress(int progress) {
 		setProgress((float) progress);
 	}
+
 	public void setProgress(float progress) {
 		mValue = progress;
 		if (mSeekBar != null)
@@ -216,14 +260,26 @@ public class SeekBarPreference extends DialogPreference implements
 	}
 
 	public int getProgressInt() {
-		return (int)mValue;
+		return Math.round(mValue);
 	}
+
 	public float getProgressFloat() {
 		return mValue;
 	}
 
-	public String toString() {
-		String text = DECIMAL_FORMAT.format(mValue);
-		return mSuffix != null ? String.format(mSuffix, text) : text;
+	public Number getProgressNumber() {
+		return mIsFloat ? Float.valueOf(mValue) : Integer.valueOf(Math
+				.round(mValue));
+	}
+
+	public String getProgressString() {
+		String text = format(mValue);
+		return mSuffix == null ? text : mSuffix.contains("%1") ? String.format(
+				mSuffix, text) : text + mSuffix;
+	}
+
+	public String format(float value) {
+		return mIsFloat ? mFormat.format(value) : mFormat.format(Math
+				.round(value));
 	}
 }

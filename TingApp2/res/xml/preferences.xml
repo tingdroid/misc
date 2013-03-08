@@ -7,12 +7,13 @@
 		android:dialogTitle="Rotation"
 		android:dialogMessage="Amount in degrees to automatically rotate the scene during animation"
 		android:text="%1$s&#176;"
-		android:max="4"
-        android:valueFrom="-12.2"
-        android:valueTo="12.5"
+        android:format="#.0##"
+		android:max="160"
+        android:valueFrom="-20.0"
+        android:valueTo="20.0"
         android:valueType="floatType"
-		android:defaultValue="2.0" />
-	
+        android:defaultValue="2.0"
+	/>
     <PreferenceCategory 
         android:title="Reminders">
         
@@ -21,8 +22,8 @@
 			android:key="pref_notifySubject"
 			android:title="Subject"
 			android:summary="Message Subject Line"
-			android:defaultValue="Reminder ..." />
-		
+			android:defaultValue="Reminder ..." 
+		/>
 		<CheckBoxPreference
 			android:key="pref_notify"
 			android:title="@string/pref_notify"
