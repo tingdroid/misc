@@ -16,11 +16,14 @@
 
     <!-- Setting -->
 	<string name="pref_title">Settings</string> 
-	<string name="pref_notify">Notify</string>
+    <string name="pref_notifySubject_summ">\"%1$s\"</string>
+	
+	<string name="pref_notify">Notify</string> 
 	<string name="pref_notify_summ">Send notifications about events</string>
 
 	<string name="pref_notifyMethod">Notification Method</string>
-	<string-array name="pref_notifyMethod_entries">
+    <string name="pref_notifyMethod_summ">Notify using %1$s</string>
+		<string-array name="pref_notifyMethod_entries">
 		<item>Email</item>
 		<item>Text</item>
 		<item>Ringtone</item>
@@ -35,6 +38,7 @@
 	<string name="pref_notifyMethod_default">Email</string>
 
 	<string name="pref_notifyBefore">Notify Before</string>
+    <string name="never">Never</string>
 	<string-array name="pref_notifyBefore_entries">
 		<item>On Time</item>
 		<item>1 min</item>
