@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory 
+
+	<com.ting.tingapp2.SeekBarPreference
+		android:key="pref_rotation"
+		android:title="Rotation"
+		android:dialogTitle="Rotation"
+		android:dialogMessage="Amount in degrees to automatically rotate the scene during animation"
+		android:text="%1$s&#176;"
+		android:max="4"
+        android:valueFrom="-12.2"
+        android:valueTo="12.5"
+        android:valueType="floatType"
+		android:defaultValue="2.0" />
+	
+    <PreferenceCategory 
         android:title="Reminders">
+        
 		<EditTextPreference
+			android:dialogMessage="Message Subject Line"
 			android:key="pref_notifySubject"
 			android:title="Subject"
 			android:summary="Message Subject Line"
 			android:defaultValue="Reminder ..." />
+		
 		<CheckBoxPreference
 			android:key="pref_notify"
 			android:title="@string/pref_notify"
 			android:summary="@string/pref_notify_summ"
 			android:defaultValue="false" />
+		
 		<ListPreference
 			android:dependency="pref_notify"
 			android:key="pref_notifyMethod"
@@ -20,6 +37,7 @@
 			android:entries="@array/pref_notifyMethod_entries"
 			android:entryValues="@array/pref_notifyMethod_values"
 			android:defaultValue="@string/pref_notifyMethod_default" />
+		
 		<MultiSelectListPreference
 			android:dependency="pref_notify"
 			android:key="pref_notifyBefore"
@@ -27,7 +45,7 @@
 			android:dialogTitle="@string/pref_notifyBefore"
 			android:entries="@array/pref_notifyBefore_entries"
 			android:entryValues="@array/pref_notifyBefore_values"
-			android:defaultValue="@array/empty"
-		/>
+			android:defaultValue="@array/empty" />
+
 	</PreferenceCategory>
 </PreferenceScreen>
