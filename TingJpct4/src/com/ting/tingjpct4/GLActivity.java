@@ -332,7 +332,7 @@ public class GLActivity extends Activity {
 		public void onDrawFrame(GL10 gl) {
 			// draw();
 			if (xpos < 0)
-				move(10, 10);  // animate
+				move(1, 1);  // animate
 
 			fb.clear(back);
 			try {

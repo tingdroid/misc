@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Rendering Settings</string>
-    <string name="app_name">TingJpct3</string>
+    <string name="app_name">TingJpct4</string>
 		
 	<!-- Menu -->	
     <string name="settings">Settings</string>
@@ -10,7 +10,7 @@
     <string name="about">About</string>
 
 	<!-- About Dialog -->	
-    <string name="about_msg">3D World with menu and settings\n\n(C) 2013 Tingtronics</string>
+    <string name="about_msg">Animated 3D World with menu and settings\n\n(C) 2013 Tingtronics</string>
     <string name="ok">OK</string>
 
     <!-- Setting -->
