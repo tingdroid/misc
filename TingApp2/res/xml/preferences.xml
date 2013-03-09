@@ -7,7 +7,7 @@
 		android:dialogTitle="Rotation"
 		android:dialogMessage="Amount in degrees to automatically rotate the scene during animation"
 		android:text="%1$s&#176;"
-        android:format="#.0##"
+        android:format="0.0##"
 		android:max="160"
         android:valueFrom="-20.0"
         android:valueTo="20.0"

@@ -62,6 +62,7 @@ public class SeekBarPreference extends DialogPreference implements
 		SeekBar.OnSeekBarChangeListener {
 	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	private static final String FLOAT_TYPE = "0";
+	private static final String DEFAULT_FORMAT = "#.####";
 
 	private SeekBar mSeekBar;
 	private TextView mValueText;
@@ -82,7 +83,7 @@ public class SeekBarPreference extends DialogPreference implements
 		mDialogMessage = attrs.getAttributeValue(ANDROID_NS, "dialogMessage");
 		mSuffix = attrs.getAttributeValue(ANDROID_NS, "text");
 		String format = attrs.getAttributeValue(ANDROID_NS, "format");
-		mFormat = new DecimalFormat(format != null ? format : "#.####");
+		mFormat = new DecimalFormat(format != null ? format : DEFAULT_FORMAT);
 
 		String type = attrs.getAttributeValue(ANDROID_NS, "valueType");
 		mIsFloat = FLOAT_TYPE.equals(type);
