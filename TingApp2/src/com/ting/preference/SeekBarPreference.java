@@ -9,9 +9,13 @@ package com.ting.preference;
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
+import java.text.DecimalFormat;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -19,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import java.text.DecimalFormat;
 
 /**
  * <p>
@@ -57,49 +60,57 @@ import java.text.DecimalFormat;
  * point and digits, whereas for 'intType' should not.
  */
 public class SeekBarPreference extends DialogPreference implements
-SeekBar.OnSeekBarChangeListener {
+		SeekBar.OnSeekBarChangeListener {
 	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	private static final String FLOAT_TYPE = "0";
 	private static final String DEFAULT_FORMAT = "#.####";
 
 	private SeekBar mSeekBar;
-	private TextView mValueText;
+	private TextView mValueText, mMessageText, mMinText, mMaxText;
 	private Context mContext;
 
-	private String mDialogMessage, mSuffix, mSummary;
+	private String mText;
+	private DecimalFormat mFormat;
+
+	private String mOriginalSummary;
 	private int mMax;
 	private float mValue = 0;
 	private float mDefault, mvMin, mvMax;
 	private boolean mIsFloat;
 
-	private DecimalFormat mFormat;
-
 	public SeekBarPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
 
-		mDialogMessage = attrs.getAttributeValue(ANDROID_NS, "dialogMessage");
-		mSuffix = attrs.getAttributeValue(ANDROID_NS, "text");
-		String format = attrs.getAttributeValue(ANDROID_NS, "format");
-		mFormat = new DecimalFormat(format != null ? format : DEFAULT_FORMAT);
-
-/*		int attrsWanted[] = new int[] {
-			android.R.attr.dialogMessage,
-			android.R.attr.summary
-		};
-		TypedArray attrsResolved = context.obtainStyledAttributes(attrs,attrsWanted);
-		mDialogMessage = attrsResolved.getString(0);
-		mSummary = attrsResolved.getString(1);
-		attrsResolved.recycle();
-		mDialogTitleResId = theAttrs.getResourceId(0,myDefaultResId);
-*/
-		mSummary = attrs.getAttributeValue(ANDROID_NS, "summary");		
-        if (false && mSummary.contains("@")) {
-			int summId = attrs.getAttributeResourceValue(ANDROID_NS, "summary", 0);
-			if (summId != 0) {
-				mSummary = getContext().getResources().getString(summId);
-			}
+		// override summary if it contains value parameter (%1)
+		mOriginalSummary = getSummary().toString();
+		if (mOriginalSummary != null) {
+			if (mOriginalSummary.contains("%1")) {
+				setSummary(null);
+			} else {
+				mOriginalSummary = null;
+			} 
 		}
+		
+		int attrsWanted[] = new int[] { 
+				android.R.attr.format, 
+				android.R.attr.text
+		};
+		TypedArray a = context.obtainStyledAttributes(attrs, attrsWanted);
+
+        for (int i = a.getIndexCount() ; 0 < i--; ) {
+            int attr = a.getIndex(i);
+            switch (attrsWanted[i]) {
+                case android.R.attr.format:
+            		String fmt = a.getString(attr);
+            		mFormat = new DecimalFormat(fmt != null ? fmt : DEFAULT_FORMAT);
+                    break;
+                case android.R.attr.text:
+                	mText = a.getString(attr);
+                    break;
+            }
+        }
+		a.recycle();
 		
 		String type = attrs.getAttributeValue(ANDROID_NS, "valueType");
 		mIsFloat = FLOAT_TYPE.equals(type);
@@ -110,13 +121,12 @@ SeekBar.OnSeekBarChangeListener {
 			mvMin = attrs.getAttributeFloatValue(ANDROID_NS, "valueFrom", 0);
 			mvMax = attrs.getAttributeFloatValue(ANDROID_NS, "valueTo", mMax);
 			mDefault = attrs.getAttributeFloatValue(ANDROID_NS, "defaultValue",
-													mvMin);
-		}
-		else {
+					mvMin);
+		} else {
 			mvMin = attrs.getAttributeIntValue(ANDROID_NS, "valueFrom", 0);
 			mvMax = attrs.getAttributeIntValue(ANDROID_NS, "valueTo", mMax);
 			mDefault = attrs.getAttributeIntValue(ANDROID_NS, "defaultValue",
-												  (int) mvMin);
+					(int) mvMin);
 		}
 	}
 
@@ -128,62 +138,62 @@ SeekBar.OnSeekBarChangeListener {
 		layout.setOrientation(LinearLayout.VERTICAL);
 		layout.setPadding(16, 16, 16, 16);
 
-		if (mDialogMessage != null) {
-			TextView messageText = new TextView(mContext);
-			messageText.setText(mDialogMessage);
-			messageText.setPadding(0, 0, 0, 16);
-			layout.addView(messageText, new LinearLayout.LayoutParams(
-							   LinearLayout.LayoutParams.MATCH_PARENT,
-							   LinearLayout.LayoutParams.WRAP_CONTENT));
+		if (getDialogMessage() != null) {
+			mMessageText = new TextView(mContext);
+			mMessageText.setPadding(0, 0, 0, 16);
+			layout.addView(mMessageText, new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT));
 		}
 
 		mValueText = new TextView(mContext);
 		mValueText.setGravity(Gravity.CENTER_HORIZONTAL);
 		mValueText.setTextSize(32);
 		layout.addView(mValueText, new LinearLayout.LayoutParams(
-						   LinearLayout.LayoutParams.MATCH_PARENT,
-						   LinearLayout.LayoutParams.WRAP_CONTENT));
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT));
 
-		if (mDialogMessage != null) {
-			RelativeLayout rangeLayout = new RelativeLayout(mContext);
-
-			TextView minText = new TextView(mContext);
-			minText.setText(format(mvMin));
+		RelativeLayout rangeLayout = new RelativeLayout(mContext);
+		{
+			mMinText = new TextView(mContext);
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
+					LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			rangeLayout.addView(minText, params);
+			rangeLayout.addView(mMinText, params);
 
-			TextView maxText = new TextView(mContext);
-			maxText.setText(format(mvMax));
+			mMaxText = new TextView(mContext);
 			params = new RelativeLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
+					LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
 			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			rangeLayout.addView(maxText, params);
+			rangeLayout.addView(mMaxText, params);
 
 			layout.addView(rangeLayout);
 		}
-
+		
 		mSeekBar = new SeekBar(mContext);
 		layout.addView(mSeekBar, new LinearLayout.LayoutParams(
-						   LinearLayout.LayoutParams.MATCH_PARENT,
-						   LinearLayout.LayoutParams.WRAP_CONTENT));
-		mSeekBar.setMax(mMax);
-		mValue = getPersisted();
-		mSeekBar.setProgress(toProgress(mValue));
-		mSeekBar.setOnSeekBarChangeListener(this);
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT));
 
-		mValueText.setText(getProgressString());
 		return layout;
 	}
 
 	@Override
 	protected void onBindDialogView(View v) {
 		super.onBindDialogView(v);
+		mValue = getPersisted();
+
+		if (getDialogMessage() != null) {
+			mMessageText.setText(getDialogMessage());
+		}
+		mMinText.setText(format(mvMin));
+		mMaxText.setText(format(mvMax));
+		mValueText.setText(getProgressString());
 		mSeekBar.setMax(mMax);
 		mSeekBar.setProgress(toProgress(mValue));
+		mSeekBar.setOnSeekBarChangeListener(this);
 	}
 
 	@Override
@@ -191,11 +201,10 @@ SeekBar.OnSeekBarChangeListener {
 		super.onSetInitialValue(restore, defaultValue);
 		if (restore) {
 			mValue = getPersisted();
-		}
-		else {
+		} else {
 			mValue = Float.parseFloat(String.valueOf(defaultValue));
 		}
-		updateSummary();		
+		updateSummary();
 	}
 
 	/**
@@ -246,7 +255,7 @@ SeekBar.OnSeekBarChangeListener {
 		float fVal = mDefault;
 		if (shouldPersist()) {
 			fVal = mIsFloat ? getPersistedFloat(mDefault)
-				: getPersistedInt((int) mDefault);
+					: getPersistedInt((int) mDefault);
 		}
 		return fVal;
 	}
@@ -256,18 +265,15 @@ SeekBar.OnSeekBarChangeListener {
 			return;
 		if (mIsFloat) {
 			persistFloat(fVal);
-		}
-		else {
+		} else {
 			persistInt(Math.round(fVal));
 		}
 	}
 
 	private void updateSummary() {
-		if (mSummary != null) return;
-
-		if (mSummary.contains("%1")) {
-			setSummary(String.format(mSummary, format(mValue)));
-		}
+		if (mOriginalSummary == null)
+			return;
+		setSummary(String.format(mOriginalSummary, format(mValue)));
 	}
 
 	// public interface
@@ -300,17 +306,17 @@ SeekBar.OnSeekBarChangeListener {
 
 	public Number getProgressNumber() {
 		return mIsFloat ? Float.valueOf(mValue) : Integer.valueOf(Math
-																  .round(mValue));
+				.round(mValue));
 	}
 
 	public String getProgressString() {
 		String text = format(mValue);
-		return mSuffix == null ? text : mSuffix.contains("%1") ? String.format(
-			mSuffix, text) : text + mSuffix;
+		return mText == null ? text : mText.contains("%1") ? String.format(
+				mText, text) : text + mText;
 	}
 
 	public String format(float value) {
 		return mIsFloat ? mFormat.format(value) : mFormat.format(Math
-																 .round(value));
+				.round(value));
 	}
 }

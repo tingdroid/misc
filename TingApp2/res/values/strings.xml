@@ -4,59 +4,59 @@
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">TingApp2</string>
 
-	<!-- Menu -->	
+    <!-- Menu -->
     <string name="settings">Settings</string>
     <string name="mute">Mute</string>
     <string name="alert">Alert</string>
     <string name="about">About</string>
 
-	<!-- About Dialog -->	
-    <string name="about_msg">Simple App with menu and settings\n\n(C) 2013 Tingtronics</string>
+    <!-- About Dialog -->
+    <string name="about_msg">Simple App with menu and settings\n\n&#169; 2013 Tingtronics</string>
     <string name="ok">OK</string>
 
     <!-- Setting -->
-	<string name="pref_title">Settings</string> 
-
-	<string name="pref_rotate">Rotate</string> 
-	<string name="pref_rotate_summ">%1$s degrees</string>
-
- 
- <string name="pref_notifySubject_summ">\"%1$s\"</string>
-	
-	<string name="pref_notify">Notify</string> 
-	<string name="pref_notify_summ">Send notifications about events</string>
-
-	<string name="pref_notifyMethod">Notification Method</string>
+    <string name="pref_title">Settings</string>
+    <string name="pref_rotate">Rotate</string>
+    <string name="pref_rotate_summ">%1$s degrees</string>
+    <string name="pref_rotate_message">Amount in degrees to automatically rotate the scene during animation</string>
+    <string name="pref_rotate_format">0.0##</string>
+    <string name="pref_rotate_text">%1$s&#176;</string>
+    
+    <string name="pref_notifySubject_summ">\"%1$s\"</string>
+    <string name="pref_notify">Notify</string>
+    <string name="pref_notify_summ">Send notifications about events</string>
+    <string name="pref_notifyMethod">Notification Method</string>
     <string name="pref_notifyMethod_summ">Notify using %1$s</string>
-		<string-array name="pref_notifyMethod_entries">
-		<item>Email</item>
-		<item>Text</item>
-		<item>Ringtone</item>
-		<item>Buzzz</item>
-	</string-array>	
-	<string-array name="pref_notifyMethod_values">
-		<item>Email</item>
-		<item>Text</item>
-		<item>Ringtone</item>
-		<item>Buzzz</item>
-	</string-array>
-	<string name="pref_notifyMethod_default">Email</string>
 
-	<string name="pref_notifyBefore">Notify Before</string>
+    <string-array name="pref_notifyMethod_entries">
+        <item>Email</item>
+        <item>Text</item>
+        <item>Ringtone</item>
+        <item>Buzzz</item>
+    </string-array>
+    <string-array name="pref_notifyMethod_values">
+        <item>Email</item>
+        <item>Text</item>
+        <item>Ringtone</item>
+        <item>Buzzz</item>
+    </string-array>
+
+    <string name="pref_notifyMethod_default">Email</string>
+    <string name="pref_notifyBefore">Notify Before</string>
     <string name="never">Never</string>
-	<string-array name="pref_notifyBefore_entries">
-		<item>On Time</item>
-		<item>1 min</item>
-		<item>5 min</item>
-		<item>10 min</item>
-	</string-array>	
-	<string-array name="pref_notifyBefore_values">
-		<item>0</item>
-		<item>1</item>
-		<item>5</item>
-		<item>10</item>
-	</string-array>
 
-	<string-array name="empty"/>	
+    <string-array name="pref_notifyBefore_entries">
+        <item>On Time</item>
+        <item>1 min</item>
+        <item>5 min</item>
+        <item>10 min</item>
+    </string-array>
+    <string-array name="pref_notifyBefore_values">
+        <item>0</item>
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="empty" />
 
 </resources>
