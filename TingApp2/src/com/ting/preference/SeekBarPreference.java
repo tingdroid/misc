@@ -1,4 +1,4 @@
-package com.ting.tingapp2;
+package com.ting.preference;
 
 /* The original code was written by Matthew Wiggins 
  * and is released under the APACHE 2.0 license 
@@ -9,12 +9,9 @@ package com.ting.tingapp2;
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import java.text.DecimalFormat;
-
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.preference.DialogPreference;
-import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -22,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import java.text.DecimalFormat;
 
 /**
  * <p>
@@ -59,7 +57,7 @@ import android.widget.TextView;
  * point and digits, whereas for 'intType' should not.
  */
 public class SeekBarPreference extends DialogPreference implements
-		SeekBar.OnSeekBarChangeListener {
+SeekBar.OnSeekBarChangeListener {
 	private static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
 	private static final String FLOAT_TYPE = "0";
 	private static final String DEFAULT_FORMAT = "#.####";
@@ -68,7 +66,7 @@ public class SeekBarPreference extends DialogPreference implements
 	private TextView mValueText;
 	private Context mContext;
 
-	private String mDialogMessage, mSuffix;
+	private String mDialogMessage, mSuffix, mSummary;
 	private int mMax;
 	private float mValue = 0;
 	private float mDefault, mvMin, mvMax;
@@ -85,21 +83,40 @@ public class SeekBarPreference extends DialogPreference implements
 		String format = attrs.getAttributeValue(ANDROID_NS, "format");
 		mFormat = new DecimalFormat(format != null ? format : DEFAULT_FORMAT);
 
+/*		int attrsWanted[] = new int[] {
+			android.R.attr.dialogMessage,
+			android.R.attr.summary
+		};
+		TypedArray attrsResolved = context.obtainStyledAttributes(attrs,attrsWanted);
+		mDialogMessage = attrsResolved.getString(0);
+		mSummary = attrsResolved.getString(1);
+		attrsResolved.recycle();
+		mDialogTitleResId = theAttrs.getResourceId(0,myDefaultResId);
+*/
+		mSummary = attrs.getAttributeValue(ANDROID_NS, "summary");		
+        if (false && mSummary.contains("@")) {
+			int summId = attrs.getAttributeResourceValue(ANDROID_NS, "summary", 0);
+			if (summId != 0) {
+				mSummary = getContext().getResources().getString(summId);
+			}
+		}
+		
 		String type = attrs.getAttributeValue(ANDROID_NS, "valueType");
 		mIsFloat = FLOAT_TYPE.equals(type);
-		
+
 		mMax = attrs.getAttributeIntValue(ANDROID_NS, "max", 100);
 
 		if (mIsFloat) {
 			mvMin = attrs.getAttributeFloatValue(ANDROID_NS, "valueFrom", 0);
 			mvMax = attrs.getAttributeFloatValue(ANDROID_NS, "valueTo", mMax);
 			mDefault = attrs.getAttributeFloatValue(ANDROID_NS, "defaultValue",
-					mvMin);
-		} else {
+													mvMin);
+		}
+		else {
 			mvMin = attrs.getAttributeIntValue(ANDROID_NS, "valueFrom", 0);
 			mvMax = attrs.getAttributeIntValue(ANDROID_NS, "valueTo", mMax);
 			mDefault = attrs.getAttributeIntValue(ANDROID_NS, "defaultValue",
-					(int) mvMin);
+												  (int) mvMin);
 		}
 	}
 
@@ -116,16 +133,16 @@ public class SeekBarPreference extends DialogPreference implements
 			messageText.setText(mDialogMessage);
 			messageText.setPadding(0, 0, 0, 16);
 			layout.addView(messageText, new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT,
-					LinearLayout.LayoutParams.WRAP_CONTENT));
+							   LinearLayout.LayoutParams.MATCH_PARENT,
+							   LinearLayout.LayoutParams.WRAP_CONTENT));
 		}
 
 		mValueText = new TextView(mContext);
 		mValueText.setGravity(Gravity.CENTER_HORIZONTAL);
 		mValueText.setTextSize(32);
 		layout.addView(mValueText, new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT));
+						   LinearLayout.LayoutParams.MATCH_PARENT,
+						   LinearLayout.LayoutParams.WRAP_CONTENT));
 
 		if (mDialogMessage != null) {
 			RelativeLayout rangeLayout = new RelativeLayout(mContext);
@@ -133,16 +150,16 @@ public class SeekBarPreference extends DialogPreference implements
 			TextView minText = new TextView(mContext);
 			minText.setText(format(mvMin));
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT,
-					LinearLayout.LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
 			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 			rangeLayout.addView(minText, params);
 
 			TextView maxText = new TextView(mContext);
 			maxText.setText(format(mvMax));
 			params = new RelativeLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT,
-					LinearLayout.LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
 			params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 			rangeLayout.addView(maxText, params);
 
@@ -151,8 +168,8 @@ public class SeekBarPreference extends DialogPreference implements
 
 		mSeekBar = new SeekBar(mContext);
 		layout.addView(mSeekBar, new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT));
+						   LinearLayout.LayoutParams.MATCH_PARENT,
+						   LinearLayout.LayoutParams.WRAP_CONTENT));
 		mSeekBar.setMax(mMax);
 		mValue = getPersisted();
 		mSeekBar.setProgress(toProgress(mValue));
@@ -172,10 +189,13 @@ public class SeekBarPreference extends DialogPreference implements
 	@Override
 	protected void onSetInitialValue(boolean restore, Object defaultValue) {
 		super.onSetInitialValue(restore, defaultValue);
-		if (restore)
+		if (restore) {
 			mValue = getPersisted();
-		else
+		}
+		else {
 			mValue = Float.parseFloat(String.valueOf(defaultValue));
+		}
+		updateSummary();		
 	}
 
 	/**
@@ -193,6 +213,7 @@ public class SeekBarPreference extends DialogPreference implements
 			return;
 		if (callChangeListener(getProgressNumber())) {
 			setPersisted(mValue);
+			updateSummary();
 		}
 	}
 
@@ -225,7 +246,7 @@ public class SeekBarPreference extends DialogPreference implements
 		float fVal = mDefault;
 		if (shouldPersist()) {
 			fVal = mIsFloat ? getPersistedFloat(mDefault)
-					: getPersistedInt((int) mDefault);
+				: getPersistedInt((int) mDefault);
 		}
 		return fVal;
 	}
@@ -235,8 +256,17 @@ public class SeekBarPreference extends DialogPreference implements
 			return;
 		if (mIsFloat) {
 			persistFloat(fVal);
-		} else {
+		}
+		else {
 			persistInt(Math.round(fVal));
+		}
+	}
+
+	private void updateSummary() {
+		if (mSummary != null) return;
+
+		if (mSummary.contains("%1")) {
+			setSummary(String.format(mSummary, format(mValue)));
 		}
 	}
 
@@ -270,17 +300,17 @@ public class SeekBarPreference extends DialogPreference implements
 
 	public Number getProgressNumber() {
 		return mIsFloat ? Float.valueOf(mValue) : Integer.valueOf(Math
-				.round(mValue));
+																  .round(mValue));
 	}
 
 	public String getProgressString() {
 		String text = format(mValue);
 		return mSuffix == null ? text : mSuffix.contains("%1") ? String.format(
-				mSuffix, text) : text + mSuffix;
+			mSuffix, text) : text + mSuffix;
 	}
 
 	public String format(float value) {
 		return mIsFloat ? mFormat.format(value) : mFormat.format(Math
-				.round(value));
+																 .round(value));
 	}
 }

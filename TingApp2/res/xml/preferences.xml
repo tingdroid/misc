@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<com.ting.tingapp2.SeekBarPreference
+	<com.ting.preference.SeekBarPreference
 		android:key="pref_rotation"
-		android:title="Rotation"
+		android:title="@string/pref_rotate"
+		android:summary="%1$s degrees!"
 		android:dialogTitle="Rotation"
 		android:dialogMessage="Amount in degrees to automatically rotate the scene during animation"
 		android:text="%1$s&#176;"
