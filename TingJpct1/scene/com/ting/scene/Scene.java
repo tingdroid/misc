@@ -10,7 +10,7 @@ import com.threed.jpct.World;
 import com.ting.common.SceneHelper;
 
 public class Scene {
-	public World world;
+	public World world = new World();
 	public RGBColor background = new RGBColor(50, 50, 100);
 	public RGBColor ambient = new RGBColor(20, 20, 20);
 
@@ -18,7 +18,6 @@ public class Scene {
 	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
 
 	public Scene() {
-		world = new World();
 		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		cube = Primitives.getCube(10);
