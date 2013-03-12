@@ -1,5 +1,5 @@
 import com.threed.jpct.*;
-import com.ting.scene.HelloScene;
+import com.ting.scene.Scene;
 
 import javax.swing.*;
 
@@ -13,7 +13,7 @@ public class HelloWorldSoftware {
 
 	private JFrame frame;
 	private FrameBuffer buffer;
-	private HelloScene scene;
+	private Scene scene;
 
 	public static void main(String[] args) throws Exception {
 		new HelloWorldSoftware().loop();
@@ -25,7 +25,7 @@ public class HelloWorldSoftware {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		scene = new HelloScene();
+		scene = new Scene();
 	}
 
 	private void loop() throws Exception {

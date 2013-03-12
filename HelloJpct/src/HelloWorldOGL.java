@@ -2,17 +2,17 @@ import org.lwjgl.opengl.Display;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.IRenderer;
-import com.ting.scene.HelloScene;
+import com.ting.scene.Scene;
 
 /**
- * A simple HelloScene using the OpenGL-renderer.
+ * A simple Scene using the OpenGL-renderer.
  * @author EgonOlsen
  *
  */
 public class HelloWorldOGL {
 
 	private FrameBuffer buffer;
-	private HelloScene scene;
+	private Scene scene;
 
 	public static void main(String[] args) throws Exception {
 		if (args.length > 0) System.out.println(args[0]);
@@ -20,7 +20,7 @@ public class HelloWorldOGL {
 	}
 
 	public HelloWorldOGL() throws Exception {
-		scene = new HelloScene();
+		scene = new Scene();
 	}
 
 	private void loop() throws Exception {
