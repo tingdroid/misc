@@ -1,4 +1,4 @@
-package com.ting.tingjpct1;
+package com.ting.scene;
 
 import com.threed.jpct.Camera;
 import com.threed.jpct.Light;
@@ -7,25 +7,23 @@ import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 import com.threed.jpct.World;
+import com.ting.common.SceneHelper;
 
-/**
- * A simple demo. 
- * 
- */
-public class MyActivity extends GLActivity {
+public class Scene {
+	public World world;
+	public RGBColor background = new RGBColor(50, 50, 100);
+	public RGBColor ambient = new RGBColor(20, 20, 20);
 
-	private Object3D cube = null;
+	Object3D cube;
 	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
 
-	@Override
-    void init() {
-		back = new RGBColor(50, 50, 100);
+	public Scene() {
 		world = new World();
-		world.setAmbientLight(20, 20, 20);
+		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		cube = Primitives.getCube(10);
 		cube.calcTextureWrapSpherical();
-		cube.setTexture(addTexture("icon", 64, 64));
+		cube.setTexture(SceneHelper.addTexture("icon.png", 64, 64));
 		cube.strip();
 		cube.build();
 		world.addObject(cube);
@@ -37,17 +35,18 @@ public class MyActivity extends GLActivity {
 	    Light sun = new Light(world);
 		sun.setIntensity(250, 250, 250);
 		sun.setPosition(cube.getTransformedCenter().calcAdd(sunOffset));
-    }
+	}
 
-	@Override
-	void move(float dx, float dy) {
+	public void move(float dx, float dy) {
 		if (dx != 0) {
 			cube.rotateY(dx/-100f);
 		}
-
 		if (dy != 0) {
 			cube.rotateX(dy/-100f);
 		}
 	}
-}
 
+	public void loop() {
+		cube.rotateY(0.01f);
+	}
+}
