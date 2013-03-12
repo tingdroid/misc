@@ -166,24 +166,30 @@ public class GLActivity extends Activity {
 
 	String addTexture(String name, int index, int width, int height) {
         // Create a texture out of resource icon...:-)
-		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(index)), width, height));
-		TextureManager.getInstance().addTexture(name, texture);
+		TextureManager textureManager = TextureManager.getInstance();
+		if (!textureManager.containsTexture(name)) {
+			Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(index)), width, height));
+			textureManager.addTexture(name, texture);
+		}
 		return name;
 	}
 
 	String addTexture(String name, int width, int height) {
         // Create a texture out of the named icon...:-)
-		int index;
-		try {
-			index = R.drawable.class.getField(name).getInt(null);
-		} catch (Exception e) {
-			Logger.log(e);
-			return null;
+		TextureManager textureManager = TextureManager.getInstance();
+		if (!textureManager.containsTexture(name)) {
+			int index;
+			try {
+				index = R.drawable.class.getField(name).getInt(null);
+			} catch (Exception e) {
+				Logger.log(e);
+				return null;
+			}
+			Drawable drawable = getResources().getDrawable(index);
+			Bitmap bitmap = BitmapHelper.rescale(BitmapHelper.convert(drawable), width, height);
+			Texture texture = new Texture(bitmap);
+			textureManager.addTexture(name, texture);
 		}
-		Drawable drawable = getResources().getDrawable(index);
-		Bitmap bitmap = BitmapHelper.rescale(BitmapHelper.convert(drawable), width, height);
-		Texture texture = new Texture(bitmap);
-		TextureManager.getInstance().addTexture(name, texture);
 		return name;
 	}
 
