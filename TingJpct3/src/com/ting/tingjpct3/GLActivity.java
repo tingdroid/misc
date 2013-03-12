@@ -1,5 +1,12 @@
 package com.ting.tingjpct3;
 
+import java.lang.reflect.Field;
+
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -9,26 +16,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import com.threed.jpct.Camera;
+
 import com.threed.jpct.FrameBuffer;
-import com.threed.jpct.Light;
 import com.threed.jpct.Logger;
 import com.threed.jpct.Object3D;
-import com.threed.jpct.Primitives;
-import com.threed.jpct.RGBColor;
-import com.threed.jpct.SimpleVector;
-import com.threed.jpct.Texture;
-import com.threed.jpct.TextureManager;
-import com.threed.jpct.World;
-import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
-import com.ting.tingjpct3.R;
-
-import java.lang.reflect.Field;
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.opengles.GL10;
+import com.ting.common.SceneHelper;
+import com.ting.scene.Scene;
 
 /**
  * A simple demo. This shows more how to use jPCT-AE than it shows how to write
@@ -47,8 +41,7 @@ public class GLActivity extends Activity {
 	private MyRenderer renderer = null;
 	private FrameBuffer fb = null;
 
-	protected World world = null;
-	protected RGBColor back = new RGBColor(50, 50, 100);
+	protected Scene scene = null;
 
 	private float xpos = -1;
 	private float ypos = -1;
@@ -59,6 +52,8 @@ public class GLActivity extends Activity {
 
 		Logger.log("onCreate");
 
+		SceneHelper.init(getResources(), R.drawable.class);
+		
 		if (master != null) {
 			copy(master);
 		}
@@ -99,13 +94,6 @@ public class GLActivity extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-	}
-
-	private void save() {
-		if (master == null) {
-			Logger.log("Saving master Activity!");
-			master = this;
-		}
 	}
 
 	@Override
@@ -167,6 +155,13 @@ public class GLActivity extends Activity {
 		builder.show();		
 	}	
 
+	private void save() {
+		if (master == null) {
+			Logger.log("Saving master Activity!");
+			master = this;
+		}
+	}
+
 	private void copy(Object src) {
 		try {
 			if (super.getClass().getSuperclass().equals(GLActivity.class)) {
@@ -203,7 +198,7 @@ public class GLActivity extends Activity {
 		}
 
 		if (me.getAction() == MotionEvent.ACTION_MOVE) {
-			move(me.getX() - xpos, me.getY() - ypos);
+			scene.move(me.getX() - xpos, me.getY() - ypos);
 
 			xpos = me.getX();
 			ypos = me.getY();
@@ -223,86 +218,9 @@ public class GLActivity extends Activity {
 		return true;
 	}
 
-    // Helpers	
-
-	interface AXIS {
-		public static final SimpleVector X = v3(1,0,0);
-		public static final SimpleVector Y = v3(0,1,0);
-		public static final SimpleVector Z = v3(0,0,1);
-	}
-
-	public static SimpleVector v3(float x, float y, float z) {
-		return SimpleVector.create(x, y, z);
-	}
-
-	void add(Object3D obj, Object3D parent) {
-		if (parent != null) parent.addChild(obj);
-		obj.strip();
-		obj.build();
-		world.addObject(obj);		
-	}
-
-	String addTexture(String name, int index, int width, int height) {
-        // Create a texture out of the icon
-		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(index)), width, height));
-		TextureManager.getInstance().addTexture(name, texture);
-		return name;
-	}
-
-	String colorTexture(String name) {
-        // Create a texture out of the color
-		if (!TextureManager.getInstance().containsTexture(name)) {
-			int r = Integer.valueOf(name.substring(1,3), 16);
-			int g = Integer.valueOf(name.substring(3,5), 16);
-			int b = Integer.valueOf(name.substring(5,7), 16);
-			RGBColor color = new RGBColor(r, g, b);
-			Texture texture = new Texture(8, 8, color);
-			TextureManager.getInstance().addTexture(name, texture);			
-		}
-		return name;
-	}
-
 	// Overrides
 
 	private Object3D cube1 = null;
-
-	void init() {
-		Light sun = null;
-
-		world = new World();
-		world.setAmbientLight(20, 20, 20);
-
-		sun = new Light(world);
-		sun.setIntensity(250, 250, 250);
-
-		cube1 = Primitives.getCube(10);
-		cube1.calcTextureWrapSpherical();
-		cube1.setTexture(addTexture("texture", R.drawable.icon, 64, 64));
-		cube1.strip();
-		cube1.build();
-
-		world.addObject(cube1);
-
-		Camera cam = world.getCamera();
-		cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
-		cam.lookAt(cube1.getTransformedCenter());
-
-		SimpleVector sv = new SimpleVector();
-		sv.set(cube1.getTransformedCenter());
-		sv.y -= 100;
-		sv.z -= 100;
-		sun.setPosition(sv);
-	}
-
-	void move(float dx, float dy) {
-		if (dx != 0) {
-			cube1.rotateY(dx/-100f);
-		}
-
-		if (dy != 0) {
-			cube1.rotateX(dy/-100f);
-		}
-	}
 
 	class MyRenderer implements GLSurfaceView.Renderer {
 
@@ -318,7 +236,7 @@ public class GLActivity extends Activity {
 			fb = new FrameBuffer(gl, w, h);
 
 			if (master == null) {
-				init();
+				scene = new Scene();
 
 				MemoryHelper.compact();
 
@@ -332,13 +250,13 @@ public class GLActivity extends Activity {
 		public void onDrawFrame(GL10 gl) {
 			// draw();
 
-			fb.clear(back);
+			fb.clear(scene.background);
 			try {
-				world.renderScene(fb);
+				scene.world.renderScene(fb);
 			} catch (Exception e) {
 				Logger.log(e);
 			}
-			world.draw(fb);
+			scene.world.draw(fb);
 			fb.display();
 
 			if (System.currentTimeMillis() - time >= 1000) {

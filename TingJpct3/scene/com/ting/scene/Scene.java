@@ -1,17 +1,15 @@
-package com.ting.tingjpct3;
+package com.ting.scene;
 
 import com.threed.jpct.Camera;
 import com.threed.jpct.Light;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
+import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
-import com.threed.jpct.World;
 
-/**
- * A simple demo. 
- * 
- */
-public class MyActivity extends GLActivity {
+public class Scene extends BaseScene {
+	public RGBColor background = new RGBColor(50, 50, 100);
+	public RGBColor ambient = new RGBColor(20, 20, 20);
 
 	private Object3D cube = null;
 	private Object3D center = null;
@@ -26,11 +24,9 @@ public class MyActivity extends GLActivity {
 		add(cone, parent);
 		return cone;
 	}
-	
-	@Override
-    void init() {		
-		world = new World();
-		world.setAmbientLight(20, 20, 20);
+
+	public Scene() {
+		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		center = Primitives.getSphere(1);
 		add(center, null);
@@ -52,17 +48,18 @@ public class MyActivity extends GLActivity {
 	    Light sun = new Light(world);
 		sun.setIntensity(250, 250, 250);
 		sun.setPosition(cube.getTransformedCenter().calcAdd(sunOffset));
-    }
+	}
 
-	@Override
-	void move(float dx, float dy) {
+	public void move(float dx, float dy) {
 		if (dx != 0) {
 			center.rotateY(dx/-100f);
 		}
-
 		if (dy != 0) {
 			center.rotateX(dy/-100f);
 		}
 	}
-}
 
+	public void loop() {
+		center.rotateY(0.01f);
+	}
+}
