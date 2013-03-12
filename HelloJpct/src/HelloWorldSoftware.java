@@ -1,4 +1,6 @@
 import com.threed.jpct.*;
+import com.ting.scene.HelloScene;
+
 import javax.swing.*;
 
 /**

@@ -1,3 +1,4 @@
+package com.ting.scene;
 import java.awt.Color;
 
 import com.threed.jpct.Object3D;
@@ -7,8 +8,8 @@ import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 
 public class HelloScene {
-	World world;
-	Color background = Color.BLUE;
+	public World world;
+	public Color background = Color.BLUE;
 
 	Object3D box;
 

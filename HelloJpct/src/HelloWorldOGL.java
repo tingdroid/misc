@@ -2,6 +2,7 @@ import org.lwjgl.opengl.Display;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.IRenderer;
+import com.ting.scene.HelloScene;
 
 /**
  * A simple HelloScene using the OpenGL-renderer.
