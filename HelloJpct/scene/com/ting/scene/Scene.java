@@ -7,14 +7,13 @@ import com.threed.jpct.World;
 import com.ting.common.SceneHelper;
 
 public class Scene {
-	public World world;
+	public World world = new World();
 	public RGBColor background = RGBColor.BLUE;
 	public RGBColor ambient = new RGBColor(0, 255, 0);
 
 	Object3D box;
 
 	public Scene() {
-		world = new World();
 		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		box = Primitives.getBox(13f, 2f);
