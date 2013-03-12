@@ -8,16 +8,18 @@ import com.threed.jpct.Logger;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.util.BitmapHelper;
-import com.ting.tingjpct1.R;
 
 public class SceneHelper {
 
 	public static Resources mResources;
+	public static Class R_drawable_class;
+
 	public static Resources getResources() {
 		return mResources;
 	}
-	public static void setResources(Resources resources) {
+	public static void init(Resources resources, Class r_drawable_class) {
 		mResources = resources;
+		R_drawable_class = r_drawable_class;
 	}
 	
 	public static String addTexture(String name, int index, int width, int height) {
@@ -41,7 +43,7 @@ public class SceneHelper {
 		try {
 			String shortName = name.contains(".") ? 
 					name.substring(0, name.indexOf(".")) : name;
-			index = R.drawable.class.getField(shortName).getInt(null);
+			index = R_drawable_class.getField(shortName).getInt(null);
 		} catch (Exception e) {
 			Logger.log(e);
 			return null;
