@@ -8,6 +8,8 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -163,8 +165,24 @@ public class GLActivity extends Activity {
     // Helpers	
 
 	String addTexture(String name, int index, int width, int height) {
-        // Create a texture out of the icon...:-)
+        // Create a texture out of resource icon...:-)
 		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(index)), width, height));
+		TextureManager.getInstance().addTexture(name, texture);
+		return name;
+	}
+
+	String addTexture(String name, int width, int height) {
+        // Create a texture out of the named icon...:-)
+		int index;
+		try {
+			index = R.drawable.class.getField(name).getInt(null);
+		} catch (Exception e) {
+			Logger.log(e);
+			return null;
+		}
+		Drawable drawable = getResources().getDrawable(index);
+		Bitmap bitmap = BitmapHelper.rescale(BitmapHelper.convert(drawable), width, height);
+		Texture texture = new Texture(bitmap);
 		TextureManager.getInstance().addTexture(name, texture);
 		return name;
 	}

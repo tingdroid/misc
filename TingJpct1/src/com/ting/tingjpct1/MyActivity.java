@@ -25,7 +25,7 @@ public class MyActivity extends GLActivity {
 
 		cube = Primitives.getCube(10);
 		cube.calcTextureWrapSpherical();
-		cube.setTexture(addTexture("texture", R.drawable.icon, 64, 64));
+		cube.setTexture(addTexture("icon", 64, 64));
 		cube.strip();
 		cube.build();
 		world.addObject(cube);
