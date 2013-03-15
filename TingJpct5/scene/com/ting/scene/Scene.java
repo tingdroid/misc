@@ -28,7 +28,7 @@ public class Scene {
 	}
 
 	public void loop() {
-		box.rotateY(0.05f);
+		box.rotateY(0.02f);
 	}
 
 	public void move(float dx, float dy) {
