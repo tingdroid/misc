@@ -1,6 +1,5 @@
 package com.ting.common;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.res.Resources;
@@ -29,8 +28,9 @@ public class SceneHelper {
         // Create a texture out of the named icon...:-)
 		String shortName = name.contains(".") ? 
 				name.substring(0, name.indexOf(".")) : name;
-		int index = mResources.getIdentifier(shortName, "drawable", mPackage);
-		return addTexture(shortName, index, width, height);
+		// int index = mResources.getIdentifier(shortName, "drawable", mPackage);
+		// return addTexture(shortName, index, width, height);
+		return addTexture(shortName, name, width, height);
 	}
 
 	public static String addTexture(String name) {
@@ -43,6 +43,7 @@ public class SceneHelper {
         // Create a texture out of resource icon...:-)
 		TextureManager textureManager = TextureManager.getInstance();
 		if (!textureManager.containsTexture(name)) {
+			// gets scaled image with 4/3 dimensions
 			Drawable drawable = getResources().getDrawable(index);
 			Bitmap bitmap = BitmapHelper.convert(drawable);
 			if (width != 0 && height != 0) {
@@ -60,14 +61,16 @@ public class SceneHelper {
 		if (!textureManager.containsTexture(name)) {
 			Texture texture;
 			try {
+				// gets unscaled image
 				InputStream istream = getResources().getAssets().open(fileName);
-				texture = new Texture(istream);
-			} catch (IOException e) {
+				Bitmap bitmap = BitmapHelper.loadImage(istream);
+				if (width != 0 && height != 0) {
+					bitmap = BitmapHelper.rescale(bitmap, width, height);
+				}
+				texture = new Texture(bitmap);
+			} catch (Exception e) {
 				Logger.log(e);
 				return null;
-			}
-			if (width != 0 && height != 0) {
-				// bitmap = BitmapHelper.rescale(bitmap, width, height);
 			}
 			textureManager.addTexture(name, texture);
 		}

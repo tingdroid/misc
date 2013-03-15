@@ -1,19 +1,14 @@
 package com.ting.scene;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
-import com.threed.jpct.Texture;
-import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.ting.common.SceneHelper;
 
 public class Scene {
 	public World world = new World();
-	public RGBColor background = new RGBColor(50, 50, 100);
+	public RGBColor background = RGBColor.BLUE;
 	public RGBColor ambient = new RGBColor(0, 255, 0);
 
 	Object3D box;
@@ -22,6 +17,7 @@ public class Scene {
 		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		box = Primitives.getBox(13f, 2f);
+		box.calcTextureWrapSpherical();
 		box.setTexture(SceneHelper.addTexture("box.jpg"));
 		box.setEnvmapped(Object3D.ENVMAP_ENABLED);
 		box.build();
@@ -32,7 +28,7 @@ public class Scene {
 	}
 
 	public void loop() {
-		box.rotateY(0.01f);
+		box.rotateY(0.05f);
 	}
 
 	public void move(float dx, float dy) {
