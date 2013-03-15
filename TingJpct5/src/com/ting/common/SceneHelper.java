@@ -1,5 +1,8 @@
 package com.ting.common;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,17 +15,31 @@ import com.threed.jpct.util.BitmapHelper;
 public class SceneHelper {
 
 	public static Resources mResources;
-	public static Class R_drawable_class;
+	public static String mPackage;
 
 	public static Resources getResources() {
 		return mResources;
 	}
-	public static void init(Resources resources, Class r_drawable_class) {
+	public static void init(Resources resources, String resourcePackage) {
 		mResources = resources;
-		R_drawable_class = r_drawable_class;
+		mPackage = resourcePackage;
 	}
 	
-	public static String addTexture(String name, int index, int width, int height) {
+	public static String addTexture(String name, int width, int height) {
+        // Create a texture out of the named icon...:-)
+		String shortName = name.contains(".") ? 
+				name.substring(0, name.indexOf(".")) : name;
+		int index = mResources.getIdentifier(shortName, "drawable", mPackage);
+		return addTexture(shortName, index, width, height);
+	}
+
+	public static String addTexture(String name) {
+		return addTexture(name, 0, 0);
+	}
+	
+	// hidden specifics
+
+	private static String addTexture(String name, int index, int width, int height) {
         // Create a texture out of resource icon...:-)
 		TextureManager textureManager = TextureManager.getInstance();
 		if (!textureManager.containsTexture(name)) {
@@ -37,21 +54,24 @@ public class SceneHelper {
 		return name;
 	}
 
-	public static String addTexture(String name, int width, int height) {
-        // Create a texture out of the named icon...:-)
-		String shortName = name.contains(".") ? 
-				name.substring(0, name.indexOf(".")) : name;
-		int index;
-		try {
-			index = R_drawable_class.getField(shortName).getInt(null);
-		} catch (Exception e) {
-			Logger.log(e);
-			return null;
+	private static String addTexture(String name, String fileName, int width, int height) {
+        // Create a texture out of asset file...:-)
+		TextureManager textureManager = TextureManager.getInstance();
+		if (!textureManager.containsTexture(name)) {
+			Texture texture;
+			try {
+				InputStream istream = getResources().getAssets().open(fileName);
+				texture = new Texture(istream);
+			} catch (IOException e) {
+				Logger.log(e);
+				return null;
+			}
+			if (width != 0 && height != 0) {
+				// bitmap = BitmapHelper.rescale(bitmap, width, height);
+			}
+			textureManager.addTexture(name, texture);
 		}
-		return addTexture(shortName, index, width, height);
+		return name;
 	}
 
-	public static String addTexture(String name) {
-		return addTexture(name, 0, 0);
-	}
 }

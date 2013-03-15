@@ -1,8 +1,13 @@
 package com.ting.scene;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
+import com.threed.jpct.Texture;
+import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.ting.common.SceneHelper;
 
@@ -17,7 +22,7 @@ public class Scene {
 		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		box = Primitives.getBox(13f, 2f);
-		box.setTexture(SceneHelper.addTexture("box.jpg", 64, 64));
+		box.setTexture(SceneHelper.addTexture("box.jpg"));
 		box.setEnvmapped(Object3D.ENVMAP_ENABLED);
 		box.build();
 		world.addObject(box);

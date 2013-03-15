@@ -47,7 +47,7 @@ public class GLActivity extends Activity {
 
 		Logger.log("onCreate");
 
-		SceneHelper.init(getResources(), R.drawable.class);
+		SceneHelper.init(getResources(), getPackageName());
 		
 		if (master != null) {
 			copy(master);
