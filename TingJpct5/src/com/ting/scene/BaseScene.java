@@ -1,4 +1,4 @@
-package com.ting.common;
+package com.ting.scene;
 
 import java.io.InputStream;
 
@@ -11,7 +11,7 @@ import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.util.BitmapHelper;
 
-public class SceneHelper {
+public class BaseScene {
 
 	public static Resources mResources;
 	public static String mPackage;

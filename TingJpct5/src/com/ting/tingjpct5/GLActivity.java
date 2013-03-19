@@ -14,9 +14,7 @@ import android.view.MotionEvent;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Logger;
-import com.threed.jpct.Object3D;
 import com.threed.jpct.util.MemoryHelper;
-import com.ting.common.SceneHelper;
 import com.ting.scene.Scene;
 
 /**
@@ -47,7 +45,7 @@ public class GLActivity extends Activity {
 
 		Logger.log("onCreate");
 
-		SceneHelper.init(getResources(), getPackageName());
+		Scene.init(getResources(), getPackageName());
 		
 		if (master != null) {
 			copy(master);
@@ -100,14 +98,6 @@ public class GLActivity extends Activity {
 
 	private void copy(Object src) {
 		try {
-			if (super.getClass().getSuperclass().equals(GLActivity.class)) {
-				Field[] fs = super.getClass().getSuperclass().getDeclaredFields();
-				for (Field f : fs) {
-					f.setAccessible(true);
-					f.set(this, f.get(src));
-				}
-
-			}
 			Logger.log("Copying data from master Activity!");
 			Field[] fs = src.getClass().getDeclaredFields();
 			for (Field f : fs) {
