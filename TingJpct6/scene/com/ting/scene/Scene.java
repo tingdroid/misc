@@ -16,7 +16,8 @@ public class Scene extends BaseScene {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
 		box = loadOBJ("cube1", 16);
-		
+		box.calcTextureWrapSpherical();
+		box.setTexture(addTexture("box.jpg"));
 		box.build();
 		world.addObject(box);
 
