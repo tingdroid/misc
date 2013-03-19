@@ -7,7 +7,7 @@ import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 
-public class Scene extends BaseScene {
+public class Scene extends VectorScene {
 	public RGBColor background = new RGBColor(50, 50, 100);
 	public RGBColor ambient = new RGBColor(20, 20, 20);
 

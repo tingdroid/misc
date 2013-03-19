@@ -154,10 +154,6 @@ public class GLActivity extends Activity {
 		return true;
 	}
 
-	// Overrides
-
-	private Object3D cube1 = null;
-
 	class MyRenderer implements GLSurfaceView.Renderer {
 
 		private long time = System.currentTimeMillis();

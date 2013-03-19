@@ -7,7 +7,7 @@ import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 
-public class BaseScene {
+public class VectorScene {
 	public World world = new World();
 
 	interface AXIS {
