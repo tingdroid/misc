@@ -14,7 +14,7 @@ public class Scene extends BaseScene {
 	public Scene() {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		box = loadOBJ("cube1", 8);
+		box = loadOBJ("cube1", 16);
 		
 		box.build();
 		world.addObject(box);

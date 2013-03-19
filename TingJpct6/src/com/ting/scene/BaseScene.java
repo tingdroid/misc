@@ -8,7 +8,9 @@ import android.graphics.drawable.Drawable;
 
 import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
+import com.threed.jpct.Matrix;
 import com.threed.jpct.Object3D;
+import com.threed.jpct.SimpleVector;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
@@ -89,7 +91,12 @@ public class BaseScene {
 			InputStream isObj = getResources().getAssets().open(name + ".obj");
 			InputStream isMtl = getResources().getAssets().open(name + ".mtl");
 			Object3D[] arr = Loader.loadOBJ(isObj, isMtl, scale);
-			return arr[0];
+			Object3D temp = arr[0]; 
+	        temp.setCenter(SimpleVector.ORIGIN);
+	        temp.rotateX((float)(Math.PI));
+	        temp.rotateMesh();
+	        temp.setRotationMatrix(new Matrix());
+			return temp;
 		} catch (Exception e) {
 			Logger.log(e);
 			return null;
