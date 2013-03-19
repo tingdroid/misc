@@ -1,5 +1,6 @@
 package com.ting.scene;
 
+import com.threed.jpct.Light;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
