@@ -6,15 +6,20 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+import com.threed.jpct.Loader;
 import com.threed.jpct.Logger;
+import com.threed.jpct.Object3D;
 import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
+import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 
 public class BaseScene {
 
 	public static Resources mResources;
 	public static String mPackage;
+
+	public World world = new World();
 
 	public static Resources getResources() {
 		return mResources;
@@ -75,6 +80,20 @@ public class BaseScene {
 			textureManager.addTexture(name, texture);
 		}
 		return name;
+	}
+
+
+	public static Object3D loadOBJ(String name, float scale) {
+		try {
+			// gets unscaled image
+			InputStream isObj = getResources().getAssets().open(name + ".obj");
+			InputStream isMtl = getResources().getAssets().open(name + ".mtl");
+			Object3D[] arr = Loader.loadOBJ(isObj, isMtl, scale);
+			return arr[0];
+		} catch (Exception e) {
+			Logger.log(e);
+			return null;
+		}
 	}
 
 }

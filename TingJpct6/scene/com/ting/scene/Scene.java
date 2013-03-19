@@ -1,30 +1,30 @@
 package com.ting.scene;
 
 import com.threed.jpct.Object3D;
-import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
-import com.threed.jpct.World;
-import com.ting.scene.BaseScene;
+import com.threed.jpct.SimpleVector;
 
 public class Scene extends BaseScene {
-	public World world = new World();
 	public RGBColor background = RGBColor.BLUE;
 	public RGBColor ambient = new RGBColor(0, 255, 0);
 
 	Object3D box;
+	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
 
 	public Scene() {
-		world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
+		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		box = Primitives.getBox(13f, 2f);
-		box.calcTextureWrapSpherical();
-		box.setTexture(addTexture("box.jpg"));
-		box.setEnvmapped(Object3D.ENVMAP_ENABLED);
+		box = loadOBJ("cube1", 8);
+		
 		box.build();
 		world.addObject(box);
 
 		world.getCamera().setPosition(50, -50, -5);
 		world.getCamera().lookAt(box.getTransformedCenter());
+
+	    Light sun = new Light(world);
+		sun.setIntensity(250, 250, 250);
+		sun.setPosition(box.getTransformedCenter().calcAdd(sunOffset));
 	}
 
 	public void loop() {
