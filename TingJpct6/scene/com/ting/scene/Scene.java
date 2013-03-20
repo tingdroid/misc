@@ -9,36 +9,36 @@ public class Scene extends BaseScene {
 	public RGBColor background = RGBColor.BLUE;
 	public RGBColor ambient = new RGBColor(0, 255, 0);
 
-	Object3D box;
-	SimpleVector sunOffset = new SimpleVector(-100, -100, -75);
+	Object3D shape;
+	SimpleVector lightOffset = new SimpleVector(-100, -100, -75);
 
 	public Scene() {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		box = loadOBJ("cube1", 16);
-		box.calcTextureWrapSpherical();
-		box.setTexture(addTexture("box.jpg"));
-		box.build();
-		world.addObject(box);
+		shape = loadOBJ("plane", 6);
+		shape.calcTextureWrapSpherical();
+		shape.setTexture(addTexture("box.jpg"));
+		shape.build();
+		world.addObject(shape);
 
 		world.getCamera().setPosition(50, -50, -5);
-		world.getCamera().lookAt(box.getTransformedCenter());
+		world.getCamera().lookAt(shape.getTransformedCenter());
 
-	    Light sun = new Light(world);
-		sun.setIntensity(250, 250, 250);
-		sun.setPosition(box.getTransformedCenter().calcAdd(sunOffset));
+	    Light light = new Light(world);
+		light.setIntensity(250, 250, 250);
+		light.setPosition(shape.getTransformedCenter().calcAdd(lightOffset));
 	}
 
 	public void loop() {
-		box.rotateY(0.02f);
+		shape.rotateY(0.02f);
 	}
 
 	public void move(float dx, float dy) {
 		if (dx != 0) {
-			box.rotateY(dx/-100f);
+			shape.rotateY(dx/-100f);
 		}
 		if (dy != 0) {
-			box.rotateX(dy/-100f);
+			shape.rotateX(dy/-100f);
 		}
 	}
 
