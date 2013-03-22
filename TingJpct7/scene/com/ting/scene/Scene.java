@@ -15,9 +15,9 @@ public class Scene extends BaseScene {
 	public Scene() {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		shape = loadOBJ("Globe_01", 6);
+		shape = loadOBJ("Terrain_02", 6);
 		// shape.calcTextureWrapSpherical();
-		shape.setTexture(addTexture("Globe_01.png"));
+		shape.setTexture(addTexture("Terrain_02.png"));
 		shape.build();
 		world.addObject(shape);
 
