@@ -6,7 +6,7 @@ import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 
 public class Scene extends BaseScene {
-	public RGBColor background = RGBColor.BLUE;
+	public RGBColor background = new RGBColor(20, 20, 120);
 	public RGBColor ambient = new RGBColor(0, 255, 0);
 
 	Object3D shape;
@@ -15,13 +15,13 @@ public class Scene extends BaseScene {
 	public Scene() {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		shape = loadOBJ("Terrain_02", 6);
+		shape = loadOBJ("Terrain_02", 10);
 		// shape.calcTextureWrapSpherical();
 		shape.setTexture(addTexture("Terrain_02.png"));
 		shape.build();
 		world.addObject(shape);
 
-		world.getCamera().setPosition(50, -50, -5);
+		world.getCamera().setPosition(50, -20, -5);
 		world.getCamera().lookAt(shape.getTransformedCenter());
 
 	    Light light = new Light(world);
@@ -30,7 +30,7 @@ public class Scene extends BaseScene {
 	}
 
 	public void loop() {
-		shape.rotateY(0.02f);
+		shape.rotateY(0.01f);
 	}
 
 	public void move(float dx, float dy) {
