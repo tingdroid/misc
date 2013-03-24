@@ -6,7 +6,7 @@ import com.threed.jpct.RGBColor;
 import com.threed.jpct.SimpleVector;
 
 public class Scene extends BaseScene {
-	public RGBColor background = new RGBColor(20, 20, 120);
+	public RGBColor background = new RGBColor(20, 120, 20);
 	public RGBColor ambient = new RGBColor(0, 255, 0);
 
 	Object3D shape;
@@ -15,9 +15,9 @@ public class Scene extends BaseScene {
 	public Scene() {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		shape = loadOBJ("Terrain_02", 10);
+		shape = loadOBJ("BMan_02", 3);
 		// shape.calcTextureWrapSpherical();
-		shape.setTexture(addTexture("Terrain_02.png"));
+		shape.setTexture(addTexture("BMan_02.png"));
 		shape.build();
 		world.addObject(shape);
 

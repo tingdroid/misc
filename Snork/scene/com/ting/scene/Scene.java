@@ -1,6 +1,7 @@
 package com.ting.scene;
 
 import com.threed.jpct.Camera;
+import com.threed.jpct.Config;
 import com.threed.jpct.GenericVertexController;
 import com.threed.jpct.Light;
 import com.threed.jpct.Mesh;
@@ -23,6 +24,16 @@ public class Scene extends BaseScene {
 	SimpleVector lightOffset = new SimpleVector(-100, -100, -75);
 
 	public Scene() {
+		Config.glAvoidTextureCopies = true;
+		Config.maxPolysVisible = 1000;
+		Config.glColorDepth = 24;
+		Config.glFullscreen = false;
+		Config.farPlane = 4000;
+		Config.glShadowZBias = 0.8f;
+		Config.lightMul = 1;
+		Config.collideOffset = 500;
+		Config.glTrilinear = true;
+		
 		// world.setAmbientLight(ambient.getRed(), ambient.getGreen(),
 		// ambient.getBlue());
 
