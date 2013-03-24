@@ -24,13 +24,13 @@ public class Scene extends BaseScene {
 	SimpleVector lightOffset = new SimpleVector(-100, -100, -75);
 
 	public Scene() {
-		Config.glAvoidTextureCopies = true;
+	//	Config.glAvoidTextureCopies = true;
 		Config.maxPolysVisible = 1000;
-		Config.glColorDepth = 24;
-		Config.glFullscreen = false;
+	//	Config.glColorDepth = 24;
+	//	Config.glFullscreen = false;
 		Config.farPlane = 4000;
-		Config.glShadowZBias = 0.8f;
-		Config.lightMul = 1;
+	//	Config.glShadowZBias = 0.8f;
+	//	Config.lightMul = 1;
 		Config.collideOffset = 500;
 		Config.glTrilinear = true;
 		
