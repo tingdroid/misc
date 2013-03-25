@@ -76,7 +76,7 @@ public class Scene extends BaseScene {
 		dome.translate(center.getTransformedCenter().calcSub(dome.getTransformedCenter()));
 		dome.setLighting(Object3D.LIGHTING_NO_LIGHTS);
 		dome.setAdditionalColor(RGBColor.WHITE);
-		add(dome, center);
+		add(dome, null);
 		
 		Camera cam = world.getCamera();
 		cam.setPosition(100, -50, -20);
@@ -94,14 +94,17 @@ public class Scene extends BaseScene {
 
 	public void loop() {
 		center.rotateY(0.002f);
+		dome.rotateY(0.0002f);
 	}
 
 	public void move(float dx, float dy) {
 		if (dx != 0) {
 			center.rotateY(dx / -100f);
+			dome.rotateY(dx / -100f);
 		}
 		if (dy != 0) {
 			center.rotateX(dy / -100f);
+			dome.rotateX(dy / -100f);
 		}
 	}
 
