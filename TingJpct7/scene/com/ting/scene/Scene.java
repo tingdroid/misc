@@ -15,13 +15,13 @@ public class Scene extends BaseScene {
 	public Scene() {
 		//world.setAmbientLight(ambient.getRed(), ambient.getGreen(), ambient.getBlue());
 
-		shape = loadOBJ("BMan_02", 3);
+		shape = loadOBJ("BMan_02", 6);
 		// shape.calcTextureWrapSpherical();
 		shape.setTexture(addTexture("BMan_02.png"));
 		shape.build();
 		world.addObject(shape);
 
-		world.getCamera().setPosition(50, -20, -5);
+		world.getCamera().setPosition(50, -40, -15);
 		world.getCamera().lookAt(shape.getTransformedCenter());
 
 	    Light light = new Light(world);
