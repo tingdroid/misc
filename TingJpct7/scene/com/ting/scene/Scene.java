@@ -38,7 +38,7 @@ public class Scene extends BaseScene {
 			shape.rotateY(dx/-100f);
 		}
 		if (dy != 0) {
-			shape.rotateX(dy/-100f);
+			shape.rotateZ(dy/-100f);
 		}
 	}
 

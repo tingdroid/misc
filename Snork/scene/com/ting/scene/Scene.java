@@ -103,8 +103,8 @@ public class Scene extends BaseScene {
 			dome.rotateY(dx / -100f);
 		}
 		if (dy != 0) {
-			center.rotateX(dy / -100f);
-			dome.rotateX(dy / -100f);
+			center.rotateZ(dy / -100f);
+			dome.rotateZ(dy / -100f);
 		}
 	}
 

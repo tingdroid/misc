@@ -20,6 +20,8 @@ public class Pointer {
 	public void move(float x, float y) {
 		dx += x - this.x;
 		dy += y - this.y;
+		this.x = x;
+		this.y = y;
 	}
 
 	public boolean isDown() {
