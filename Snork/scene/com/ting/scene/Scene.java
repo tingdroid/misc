@@ -21,6 +21,7 @@ public class Scene extends BaseScene {
 	Object3D rock;
 	Object3D snork;
 	Object3D dome;
+	Camera cam;
 	SimpleVector lightOffset = new SimpleVector(-100, -100, -75);
 
 	public Scene() {
@@ -78,10 +79,8 @@ public class Scene extends BaseScene {
 		dome.setAdditionalColor(RGBColor.WHITE);
 		add(dome, null);
 		
-		Camera cam = world.getCamera();
+		cam = world.getCamera();
 		cam.setPosition(100, -50, -20);
-		//cam.moveCamera(Camera.CAMERA_MOVEOUT, 150);
-		//cam.moveCamera(Camera.CAMERA_MOVEUP, 100);
 		cam.lookAt(snork.getTransformedCenter());
 		cam.setFOV(1.5f);		
 		
@@ -108,6 +107,10 @@ public class Scene extends BaseScene {
 		}
 	}
 
+	public void zoom(float dz) {
+		cam.moveCamera(Camera.CAMERA_MOVEIN, dz);
+	}
+	
 	// Helper Methods
 
 	void add(Object3D obj, Object3D parent) {
