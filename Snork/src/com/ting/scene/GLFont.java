@@ -64,6 +64,7 @@ public class GLFont {
 	 * @author olegyk 
 	 */
 	public static GLFont getGLFont(String face, int style, int size) {
+		/*
 		Context context = getApplication();
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 
@@ -71,6 +72,8 @@ public class GLFont {
 		windowManager.getDefaultDisplay().getMetrics(metrics);		
 
 		dpSize = (int)(size * metrics.density);
+		*/
+		dpSize = (int)(size * 2.0);
 		
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
