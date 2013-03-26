@@ -23,6 +23,7 @@ public class BaseScene {
 	public static String mPackage;
 
 	public World world = new World();
+	public HUD hud = new HUD();
 
 	public static Resources getResources() {
 		return mResources;

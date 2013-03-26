@@ -36,7 +36,6 @@ public class GLActivity extends Activity {
 	private FrameBuffer fb = null;
 
 	protected Scene scene = null;
-
 	private Pointer pointer = new Pointer();
 	
 	private int fps = 0;
@@ -165,12 +164,10 @@ public class GLActivity extends Activity {
 		}
 
 		public void onDrawFrame(GL10 gl) {
-			// draw();
 			if (pointer.isDown()) {
 				scene.move(pointer.getDX(), pointer.getDY());
 			} else {
 				scene.loop();
-				// scene.move(-1, 0);  // animate
 			}
 
 			fb.clear(scene.background);

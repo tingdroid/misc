@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Logger;
 import com.threed.jpct.util.MemoryHelper;
+import com.ting.scene.Pointer;
 import com.ting.scene.Scene;
 
 /**
@@ -35,9 +36,7 @@ public class GLActivity extends Activity {
 	private FrameBuffer fb = null;
 
 	protected Scene scene = null;
-
-	private float xpos = -1;
-	private float ypos = -1;
+	private Pointer pointer = new Pointer();
 
 	private int fps = 0;
 
@@ -112,22 +111,17 @@ public class GLActivity extends Activity {
 	public boolean onTouchEvent(MotionEvent me) {
 
 		if (me.getAction() == MotionEvent.ACTION_DOWN) {
-			xpos = me.getX();
-			ypos = me.getY();
+			pointer.down(me.getX(), me.getY());
 			return true;
 		}
 
 		if (me.getAction() == MotionEvent.ACTION_UP) {
-			xpos = -1;
-			ypos = -1;
+			pointer.up();
 			return true;
 		}
 
 		if (me.getAction() == MotionEvent.ACTION_MOVE) {
-			scene.move(me.getX() - xpos, me.getY() - ypos);
-
-			xpos = me.getX();
-			ypos = me.getY();
+			pointer.move(me.getX(), me.getY());
 			return true;
 		}
 
@@ -170,10 +164,11 @@ public class GLActivity extends Activity {
 		}
 
 		public void onDrawFrame(GL10 gl) {
-			// draw();
-			if (xpos < 0)
+			if (pointer.isDown()) {
+				scene.move(pointer.getDX(), pointer.getDY());
+			} else {
 				scene.loop();
-				// scene.move(-1, 0);  // animate
+			}
 
 			fb.clear(scene.background);
 			try {
@@ -182,6 +177,10 @@ public class GLActivity extends Activity {
 				Logger.log(e);
 			}
 			scene.world.draw(fb);
+
+			scene.hud.draw(fb);
+			scene.hud.draw(fb, "Snork", fb.getWidth() - 50, 28);
+			
 			fb.display();
 
 			if (System.currentTimeMillis() - time >= 1000) {

@@ -1,10 +1,10 @@
 package com.ting.scene;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.threed.jpct.FrameBuffer;
+import com.threed.jpct.RGBColor;
 
 public class HUD {
 
@@ -13,8 +13,8 @@ public class HUD {
 	int xOffset = 20;
 	int yOffset = 10;
 	int transparency = 10;
-	Color color = Color.LIGHT_GRAY;
-	Color color2 = Color.YELLOW;
+	RGBColor color = new RGBColor(200, 200, 200);
+	RGBColor color2 = new RGBColor(255, 255, 0);
 
 	GLFont glFont;
 	List<String> strings = new ArrayList<String>();
