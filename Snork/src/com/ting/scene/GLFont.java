@@ -1,5 +1,10 @@
 package com.ting.scene;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +14,7 @@ import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.RGBColor;
@@ -58,7 +64,12 @@ public class GLFont {
 	 * @author olegyk 
 	 */
 	public static GLFont getGLFont(String face, int style, int size) {
+		Context context = getApplication();
+		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+
 		DisplayMetrics metrics = new DisplayMetrics();
+		windowManager.getDefaultDisplay().getMetrics(metrics);		
+
 		dpSize = (int)(size * metrics.density);
 		
 		Paint paint = new Paint();
@@ -243,4 +254,19 @@ public class GLFont {
 		return alphabet.indexOf(c);
 	}
 
+	private static Application getApplication() {
+		try {
+		    final Class<?> activityThreadClass =
+		            Class.forName("android.app.ActivityThread");
+		    final Method method = activityThreadClass.getMethod("currentApplication");
+		    return (Application) method.invoke(null, (Object[]) null);
+		} catch (final ClassNotFoundException e) {
+		} catch (final NoSuchMethodException e) {
+		} catch (final IllegalArgumentException e) {
+		} catch (final IllegalAccessException e) {
+		} catch (final InvocationTargetException e) {
+		}
+		return null;
+	}
+	
 }
