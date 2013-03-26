@@ -53,13 +53,18 @@ public class HUD {
 	public void draw(FrameBuffer buffer, String s, int x, int y) {
 		if (s == null || s.length() <= 0)
 			return;
+		getGLFont();
+		if (x < 0) {
+			x += GLFont.pd(buffer.getWidth());
+		}
+		
 		int sep = s.indexOf(':');
 		if (sep == -1) {
-			getGLFont().blitString(buffer, s, x, y, 10, color);
+			glFont.blitString(buffer, s, x, y, 10, color);
 		} else {
-			x = getGLFont().blitString(buffer, s.substring(0, sep), x, y,
+			x = glFont.blitString(buffer, s.substring(0, sep), x, y,
 					transparency, color);
-			getGLFont().blitString(buffer, s.substring(sep+1), x, y,
+			glFont.blitString(buffer, s.substring(sep+1), x, y,
 					transparency, color2);
 		}
 	}

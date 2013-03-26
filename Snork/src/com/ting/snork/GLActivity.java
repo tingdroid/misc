@@ -170,9 +170,8 @@ public class GLActivity extends Activity {
 			} else {
 				scene.loop();
 			}
-			scene.hud.setText(0, "Position: %d %d", pointer.getX(), pointer.getY());
-			// scene.hud.setText(1, "Scale: %d", (int)dz);
-			scene.hud.setText(3, "dpSize: %d", GLFont.dpSize);
+			scene.hud.setText(0, "Position: %s %s", pointer.getX(), pointer.getY());
+			scene.hud.setText(1, "Scale: %s", (int)0);
 
 			fb.clear(scene.background);
 			try {
@@ -183,7 +182,7 @@ public class GLActivity extends Activity {
 			scene.world.draw(fb);
 
 			scene.hud.draw(fb);
-			scene.hud.draw(fb, "Snork", fb.getWidth() - 50, 28);
+			scene.hud.draw(fb, "Snork", -50, 28);
 			
 			fb.display();
 

@@ -1,10 +1,8 @@
 package com.ting.scene;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.app.Application;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,10 +11,9 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
 import com.threed.jpct.FrameBuffer;
+import com.threed.jpct.Logger;
 import com.threed.jpct.RGBColor;
 
 /**
@@ -58,8 +55,14 @@ public class GLFont {
 		    '\u00e7', '\u00c7', '\u011f', '\u011e', '\u0131', '\u0130',  
 		    '\u00f6', '\u00d6', '\u015f', '\u015e', '\u00fc', '\u00dc' });
 
-	
-	public static int dpSize;
+	public static float density = 2f;
+	public static int dp(int units) {
+		return (int)(units * density);
+	}		
+	public static int pd(int pixels) {
+		return (int)(pixels / density);
+	}
+		
 	/** using platform-neutral Font parameters 
 	 * @author olegyk 
 	 */
@@ -69,16 +72,14 @@ public class GLFont {
 		WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 
 		DisplayMetrics metrics = new DisplayMetrics();
-		windowManager.getDefaultDisplay().getMetrics(metrics);		
-
-		dpSize = (int)(size * metrics.density);
+		windowManager.getDefaultDisplay().getMetrics(metrics);	
+		density = metrics.density;
 		*/
-		dpSize = (int)(size * 2.0);
-		
+
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setTypeface(Typeface.create(face, style));
-		paint.setTextSize(dpSize);
+		paint.setTextSize(dp(size));
 		return new GLFont(paint);
 	}
 
@@ -222,7 +223,8 @@ public class GLFont {
 	 * @return    next x offset. Useful for chaining calls.
 	 */
 	public int blitString(FrameBuffer buffer, String s, int x, int y, int transparency, RGBColor color) {
-		y -= baseline;
+		y = dp(y) - baseline;
+		x = dp(x);
 
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
@@ -234,11 +236,12 @@ public class GLFont {
 				x += size.x;
 			}
 		}
-		return x;
+		return pd(x);
 	}
 	
 	public int blitString(FrameBuffer buffer, char[] s, int x, int y, int transparency, RGBColor color) {
-		y -= baseline;
+		y = dp(y) - baseline;
+		x = dp(x);
 
 		for (int i = 0; i < s.length; i++) {
 			char c = s[i];
@@ -250,7 +253,7 @@ public class GLFont {
 				x += size.x;
 			}
 		}
-		return x;
+		return pd(x);
 	}
 	
 	public int getCharImageId(char c) {
@@ -262,12 +265,10 @@ public class GLFont {
 		    final Class<?> activityThreadClass =
 		            Class.forName("android.app.ActivityThread");
 		    final Method method = activityThreadClass.getMethod("currentApplication");
-		    return (Application) method.invoke(null, (Object[]) null);
-		} catch (final ClassNotFoundException e) {
-		} catch (final NoSuchMethodException e) {
-		} catch (final IllegalArgumentException e) {
-		} catch (final IllegalAccessException e) {
-		} catch (final InvocationTargetException e) {
+		    Application app = (Application) method.invoke(null, (Object[]) null);
+		    return app;
+		} catch (final Exception e) {
+			Logger.log(e);
 		}
 		return null;
 	}
