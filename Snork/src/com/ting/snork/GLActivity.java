@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Logger;
 import com.threed.jpct.util.MemoryHelper;
+import com.ting.scene.GLFont;
 import com.ting.scene.Pointer;
 import com.ting.scene.Scene;
 
@@ -169,6 +170,9 @@ public class GLActivity extends Activity {
 			} else {
 				scene.loop();
 			}
+			scene.hud.setText(0, "Position: %d %d", pointer.getX(), pointer.getY());
+			// scene.hud.setText(1, "Scale: %d", (int)dz);
+			scene.hud.setText(3, "dpSize: %d", GLFont.dpSize);
 
 			fb.clear(scene.background);
 			try {

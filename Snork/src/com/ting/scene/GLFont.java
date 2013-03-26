@@ -8,6 +8,7 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.RGBColor;
@@ -51,14 +52,19 @@ public class GLFont {
 		    '\u00e7', '\u00c7', '\u011f', '\u011e', '\u0131', '\u0130',  
 		    '\u00f6', '\u00d6', '\u015f', '\u015e', '\u00fc', '\u00dc' });
 
+	
+	public static int dpSize;
 	/** using platform-neutral Font parameters 
 	 * @author olegyk 
 	 */
 	public static GLFont getGLFont(String face, int style, int size) {
+		DisplayMetrics metrics = new DisplayMetrics();
+		dpSize = (int)(size * metrics.density);
+		
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setTypeface(Typeface.create(face, style));
-		paint.setTextSize(size);
+		paint.setTextSize(dpSize);
 		return new GLFont(paint);
 	}
 
