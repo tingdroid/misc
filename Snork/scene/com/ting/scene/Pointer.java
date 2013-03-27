@@ -24,6 +24,11 @@ public class Pointer {
 		this.y = y;
 	}
 
+	public void moveBy(float dx, float dy) {
+		this.dx += dx;
+		this.dy += dy;
+	}
+
 	public boolean isDown() {
 		return this.x != -1;
 	}

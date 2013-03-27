@@ -10,12 +10,12 @@ import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Logger;
 import com.threed.jpct.util.MemoryHelper;
-import com.ting.scene.GLFont;
 import com.ting.scene.Pointer;
 import com.ting.scene.Scene;
 
@@ -39,6 +39,8 @@ public class GLActivity extends Activity {
 	protected Scene scene = null;
 	private Pointer pointer = new Pointer();
 
+    private GestureDetector mGestureDetector;
+
 	private int fps = 0;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class GLActivity extends Activity {
 		Logger.log("onCreate");
 
 		Scene.init(getResources(), getPackageName());
-		
+
 		if (master != null) {
 			copy(master);
 		}
@@ -70,6 +72,8 @@ public class GLActivity extends Activity {
 		renderer = new MyRenderer();
 		mGLView.setRenderer(renderer);
 		setContentView(mGLView);
+		
+        mGestureDetector = new GestureDetector(this, mGestureListener);
 	}
 
 	@Override
@@ -109,22 +113,52 @@ public class GLActivity extends Activity {
 		}
 	}
 
-	public boolean onTouchEvent(MotionEvent me) {
+	private final GestureDetector.SimpleOnGestureListener mGestureListener = 
+		new GestureDetector.SimpleOnGestureListener() {
 
-		if (me.getAction() == MotionEvent.ACTION_DOWN) {
-			pointer.down(me.getX(), me.getY());
+		public boolean onScroll(MotionEvent e1, MotionEvent e2,
+				float distanceX, float distanceY) {
+			pointer.moveBy(-distanceX, -distanceY);
+			Logger.log(String.format("onScroll %s %s", distanceX, distanceY));
 			return true;
 		}
 
-		if (me.getAction() == MotionEvent.ACTION_UP) {
+		public boolean onSingleTapUp(MotionEvent e) {
+			Logger.log("onSingleTapUp");
+			return super.onSingleTapUp(e);
+		}
+
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+				float velocityY) {
+			Logger.log("onFling");
+			return super.onFling(e1, e2, velocityX, velocityY);
+		}
+
+		public boolean onDown(MotionEvent e) {
+			Logger.log("onDown");
+			return super.onDown(e);
+		}
+	};
+
+	public boolean onTouchEvent(MotionEvent me) {
+
+        //boolean retVal = mScaleGestureDetector.onTouchEvent(event);
+		boolean retVal = mGestureDetector.onTouchEvent(me); // || retVal;
+				
+		final int action = me.getActionMasked();
+		switch (action) {
+		case MotionEvent.ACTION_DOWN:
+			pointer.down(me.getX(), me.getY());
+			return true;
+		case MotionEvent.ACTION_UP:
 			pointer.up();
 			return true;
 		}
 
-		if (me.getAction() == MotionEvent.ACTION_MOVE) {
-			pointer.move(me.getX(), me.getY());
-			return true;
-		}
+		//if (me.getAction() == MotionEvent.ACTION_MOVE) {
+		//	pointer.move(me.getX(), me.getY());
+		//	return true;
+		//}
 
 		try {
 			Thread.sleep(15);
@@ -132,7 +166,7 @@ public class GLActivity extends Activity {
 			// No need for this...
 		}
 
-		return super.onTouchEvent(me);
+        return retVal || super.onTouchEvent(me);
 	}
 
 	protected boolean isFullscreenOpaque() {
@@ -170,8 +204,9 @@ public class GLActivity extends Activity {
 			} else {
 				scene.loop();
 			}
-			scene.hud.setText(0, "Position: %s %s", pointer.getX(), pointer.getY());
-			scene.hud.setText(1, "Scale: %s", (int)0);
+			scene.hud.setText(0, "Position: %s %s", pointer.getX(),
+					pointer.getY());
+			scene.hud.setText(1, "Scale: %s", (int) 0);
 
 			fb.clear(scene.background);
 			try {
@@ -183,7 +218,7 @@ public class GLActivity extends Activity {
 
 			scene.hud.draw(fb);
 			scene.hud.draw(fb, "Snork", -50, 28);
-			
+
 			fb.display();
 
 			if (System.currentTimeMillis() - time >= 1000) {
