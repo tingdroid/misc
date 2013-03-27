@@ -126,8 +126,10 @@ public class GLActivity extends Activity {
 	public boolean onTouchEvent(MotionEvent event) {
 
 		if (mScaleGestureDetector.onTouchEvent(event)) {
-			pointer.up();
-			return true;
+			if (event.getPointerCount() > 1) {
+				pointer.up();
+				return true;
+			}
 		}		
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:

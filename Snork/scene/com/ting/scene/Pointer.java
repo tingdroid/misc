@@ -19,6 +19,7 @@ public class Pointer {
 	}
 
 	public void move(float x, float y) {
+		if (!isDown()) return;
 		dx += x - this.x;
 		dy += y - this.y;
 		this.x = x;
