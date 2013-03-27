@@ -118,7 +118,7 @@ public class GLActivity extends Activity {
 
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
-			pointer.moveBy(-distanceX, -distanceY);
+			//pointer.moveBy(-distanceX, -distanceY);
 			Logger.log(String.format("onScroll %s %s", distanceX, distanceY));
 			return true;
 		}
@@ -153,12 +153,10 @@ public class GLActivity extends Activity {
 		case MotionEvent.ACTION_UP:
 			pointer.up();
 			return true;
+		case MotionEvent.ACTION_MOVE:
+			pointer.move(me.getX(), me.getY());
+			return true;
 		}
-
-		//if (me.getAction() == MotionEvent.ACTION_MOVE) {
-		//	pointer.move(me.getX(), me.getY());
-		//	return true;
-		//}
 
 		try {
 			Thread.sleep(15);
