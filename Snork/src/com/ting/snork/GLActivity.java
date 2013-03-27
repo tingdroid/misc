@@ -117,14 +117,18 @@ public class GLActivity extends Activity {
     private final ScaleGestureDetector.OnScaleGestureListener mScaleGestureListener =
     	new ScaleGestureDetector.SimpleOnScaleGestureListener() {
 			public boolean onScale(ScaleGestureDetector detector) {
+				pointer.zoomBy(detector.getScaleFactor());
 				Logger.log(String.format("onScale factor: %s", detector.getScaleFactor()));
 				return true;
 			}
 	};
 
 	public boolean onTouchEvent(MotionEvent event) {
-        boolean retVal = mScaleGestureDetector.onTouchEvent(event);
-				
+
+		if (mScaleGestureDetector.onTouchEvent(event)) {
+			pointer.up();
+			return true;
+		}		
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 				pointer.down(event.getX(), event.getY());
@@ -141,7 +145,7 @@ public class GLActivity extends Activity {
 		} catch (Exception e) {
 			// No need for this...
 		}
-        return retVal || super.onTouchEvent(event);
+        return super.onTouchEvent(event);
 	}
 
 	protected boolean isFullscreenOpaque() {
@@ -174,14 +178,13 @@ public class GLActivity extends Activity {
 		}
 
 		public void onDrawFrame(GL10 gl) {
-			if (pointer.isDown()) {
+			float dz = pointer.getDZ();
+			if (dz != 1) {
+				scene.zoom((dz-1)*100);
+			} else if (pointer.isDown()) {
 				scene.move(pointer.getDX(), pointer.getDY());
 			} else {
 				scene.loop();
-			}
-			float dz = pointer.getDZ();
-			if (dz != 0) {
-				scene.zoom(dz);
 			}
 			scene.hud.setText(0, "Position: %s %s", pointer.getX(),
 					pointer.getY());

@@ -5,7 +5,7 @@ public class Pointer {
 	private float y = -1;
 	private float dx = 0;
 	private float dy = 0;
-	private float dz = 0;
+	private float dz = 1;
 
 
 	public void down(float x, float y) {
@@ -31,7 +31,7 @@ public class Pointer {
 	}
 
 	public void zoomBy(float dz) {
-		this.dz += dz;
+		this.dz *= dz;
 	}
 
 	public boolean isDown() {
@@ -60,7 +60,7 @@ public class Pointer {
 
 	public float getDZ() {
 		float dz = this.dz;
-		this.dz = 0;
+		this.dz = 1;
 		return dz;
 	}
 
