@@ -12,6 +12,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Logger;
@@ -39,7 +40,7 @@ public class GLActivity extends Activity {
 	protected Scene scene = null;
 	private Pointer pointer = new Pointer();
 
-    private GestureDetector mGestureDetector;
+    private ScaleGestureDetector mScaleGestureDetector;
 
 	private int fps = 0;
 
@@ -73,7 +74,7 @@ public class GLActivity extends Activity {
 		mGLView.setRenderer(renderer);
 		setContentView(mGLView);
 		
-        mGestureDetector = new GestureDetector(this, mGestureListener);
+        mScaleGestureDetector = new ScaleGestureDetector(this, mScaleGestureListener);
 	}
 
 	@Override
@@ -113,58 +114,34 @@ public class GLActivity extends Activity {
 		}
 	}
 
-	private final GestureDetector.SimpleOnGestureListener mGestureListener = 
-		new GestureDetector.SimpleOnGestureListener() {
-
-		public boolean onScroll(MotionEvent e1, MotionEvent e2,
-				float distanceX, float distanceY) {
-			//pointer.moveBy(-distanceX, -distanceY);
-			Logger.log(String.format("onScroll %s %s", distanceX, distanceY));
-			return true;
-		}
-
-		public boolean onSingleTapUp(MotionEvent e) {
-			Logger.log("onSingleTapUp");
-			return super.onSingleTapUp(e);
-		}
-
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY) {
-			Logger.log("onFling");
-			return super.onFling(e1, e2, velocityX, velocityY);
-		}
-
-		public boolean onDown(MotionEvent e) {
-			Logger.log("onDown");
-			return super.onDown(e);
-		}
+    private final ScaleGestureDetector.OnScaleGestureListener mScaleGestureListener =
+    	new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+			public boolean onScale(ScaleGestureDetector detector) {
+				Logger.log(String.format("onScale factor: %s", detector.getScaleFactor()));
+				return true;
+			}
 	};
 
-	public boolean onTouchEvent(MotionEvent me) {
-
-        //boolean retVal = mScaleGestureDetector.onTouchEvent(event);
-		boolean retVal = mGestureDetector.onTouchEvent(me); // || retVal;
+	public boolean onTouchEvent(MotionEvent event) {
+        boolean retVal = mScaleGestureDetector.onTouchEvent(event);
 				
-		final int action = me.getActionMasked();
-		switch (action) {
-		case MotionEvent.ACTION_DOWN:
-			pointer.down(me.getX(), me.getY());
-			return true;
-		case MotionEvent.ACTION_UP:
-			pointer.up();
-			return true;
-		case MotionEvent.ACTION_MOVE:
-			pointer.move(me.getX(), me.getY());
-			return true;
+		switch (event.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN:
+				pointer.down(event.getX(), event.getY());
+				return true;
+			case MotionEvent.ACTION_UP:
+				pointer.up();
+				return true;
+			case MotionEvent.ACTION_MOVE:
+				pointer.move(event.getX(), event.getY());
+				return true;
 		}
-
 		try {
 			Thread.sleep(15);
 		} catch (Exception e) {
 			// No need for this...
 		}
-
-        return retVal || super.onTouchEvent(me);
+        return retVal || super.onTouchEvent(event);
 	}
 
 	protected boolean isFullscreenOpaque() {
@@ -202,9 +179,13 @@ public class GLActivity extends Activity {
 			} else {
 				scene.loop();
 			}
+			float dz = pointer.getDZ();
+			if (dz != 0) {
+				scene.zoom(dz);
+			}
 			scene.hud.setText(0, "Position: %s %s", pointer.getX(),
 					pointer.getY());
-			scene.hud.setText(1, "Scale: %s", (int) 0);
+			scene.hud.setText(1, "Scale: %s", dz);
 
 			fb.clear(scene.background);
 			try {
